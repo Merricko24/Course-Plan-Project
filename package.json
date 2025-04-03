@@ -1,5 +1,5 @@
 {
-  "name": "Schedules4U",
+  "name": "schedules4u",
   "main": "src/index.js",
   "dependencies": {
     "express": "^4.6.1",
