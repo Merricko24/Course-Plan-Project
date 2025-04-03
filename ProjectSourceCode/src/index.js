@@ -65,6 +65,35 @@ app.get('/welcome', (req, res) => {
   });
 
 
+  app.get('/register', (req,res) =>{
+    res.render('pages/register')
+});
+
+// Register
+app.post('/register', async (req, res) => {
+    //hash the password using bcrypt library
+    const hash = await bcrypt.hash(req.body.password, 10);
+  
+    try {
+      const { username, password } = req.body;
+
+  
+
+        const hash = await bcrypt.hash(password, 10);
+        
+        const query = 'INSERT INTO users (username, password) VALUES ($1, $2)';
+
+        const queryResult = await db.any(query, [username, hash]);
+        console.log(await db.any("select * from users"))
+        console.log(username, hash);
+        res.redirect('/login');
+    } catch(error) {
+        console.error('Error Inserting User:', error);
+        res.redirect('/register');
+      };
+        
+    });
+
 // *****************************************************
 // <!-- Section 5 : Start Server-->
 // *****************************************************
