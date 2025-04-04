@@ -1,0 +1,39 @@
+<header>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
+      <a class="navbar-brand" href="/"></a>
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+        {{#if email}}
+            <a class="nav-link" href="/">Home</a>
+        {{else}}
+            <a class="nav-link" href="/login">Home</a>
+        {{/if}}
+        </li>
+        <li class="nav-item">
+        {{#if email}}
+            <a class="nav-link" href="/schedule">Schedule</a>
+        {{else}}
+            <a class="nav-link" href="/login">Scheudle</a>
+        {{/if}}
+        </li>
+        <li class="nav-item">
+        <a class="nav-link" href="/logout">Log out</a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="navbar-collapse collapse order-3 dual-collapse2">
+      <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+              <a class="nav-link" href="#">
+                {{email}}
+              </a>
+          </li>
+          <li class="nav-item">
+            <img src="../../resources/img/logo.jpeg" alt="Logo" style="height: 40px;" class="ml-3"/>
+          </li>
+      </ul>
+    </div>
+  </nav>
+</header>
