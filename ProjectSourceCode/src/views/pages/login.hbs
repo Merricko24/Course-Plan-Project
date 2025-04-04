@@ -1,0 +1,28 @@
+{{> message}}
+
+{{> header}} 
+
+ <style>
+    h2 {text-align: center;}
+    form {text-align: center;}
+    p {text-align: center;}
+</style>
+
+<body>
+    <div class="container">
+        <h2>Login</h2>
+        <form action="/login" method="POST">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" required><br><br>
+            
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required>
+            
+            <button type="submit">Login</button>
+        </form>
+        <p>Dont have an account? <a href="/register">Register</a></p>
+    </div>
+</body>
+
+
+ {{> footer}}

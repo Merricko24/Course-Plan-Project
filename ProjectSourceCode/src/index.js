@@ -13,6 +13,8 @@ const session = require('express-session');
 // Create an instance of ExpressHandlebars and configure the layouts and partials directories.
 const hbs = handlebars.create({
   extname: 'hbs',
+  defaultLayout: 'main', // ensures that views are rendered within views/layouts/main.hbs
+
   layoutsDir: __dirname + '/views/layouts',
   partialsDir: __dirname + '/views/partials',
 });
@@ -85,6 +87,12 @@ app.get('/register', (req, res) => {
 //     res.redirect('/register');
 //   }
 // });
+
+//-----------Login Route--------------
+app.get('/login', (req,res) =>{
+  res.render('pages/login')
+});
+
 
 // -------------------------------------  START SERVER   ----------------------------------------------
 
