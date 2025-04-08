@@ -1,0 +1,39 @@
+{{>message}}
+
+{{> header}} 
+
+<!-- table for list of courses -->
+<table>
+    <!-- columns -->
+    <thead>
+        <tr>
+            <th>Course ID</th>
+            <th>Course Name</th>
+            <th>Credit Hours</th>
+        </tr>
+    </thead>
+
+    <!-- loop through and display courses -->
+    {{#each courses}}
+    <tr>
+        <td>{{course_id}}</td>
+        <td>{{course_name}}</td>
+        <td>{{credit_hours}}</td>
+        <td>
+            <!-- submit button form -->
+            <form action="/courses/add" method="POST">
+                <!-- passes course_id to API call as body -->
+                <input type="hidden" name="course_id" value="{{course_id}}">
+                <!-- button -->
+                {{#if taken}}
+                <button type="submit" disabled>ADD</button>
+                {{else}}
+                <button type="submit">ADD</button>
+                {{/if}}
+            </form>
+        </td>
+    </tr>
+    {{/each}}
+</table>
+
+{{> footer}}
