@@ -3,12 +3,14 @@
 - emphasis on developing a class recommendation feature to set our project apart from others
 - rate my professor API is not a guaranteed feature, but will be added if time allows it
 - working over spring break is not expected
+
 2. Alternative actions/options discussed
 - if team workload becomes unmanegable, Vinay suggested making appropriate adjustments
 - Vinay advised using old data and use common trends to make predictions for class recommendation feature
 - made the rate my professor API not a guaranteed feature
 - Vinay suggested scraping course data through webscraper using js soup
-3. ollow-up items
+
+3. follow-up items
 - all members will begin working on finishing the partials and node.js files for the project
 - some members will also potentially try to start working on html for application pages (login/logout, register)
 
