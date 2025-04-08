@@ -1,38 +1,38 @@
 <header>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #c8b273;">
     <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
       <a class="navbar-brand" href="/"></a>
-      <ul class="navbar-nav mr-auto">
+      <ul class="navbar-nav mr-auto font-weight-bold">
         <li class="nav-item">
-        {{#if email}}
-            <a class="nav-link" href="/">Home</a>
-        {{else}}
-            <a class="nav-link" href="/login">Home</a>
-        {{/if}}
+          {{#if email}}
+              <a class="nav-link" href="/">Home</a>
+          {{else}}
+              <a class="nav-link" href="/login">Home</a>
+          {{/if}}
         </li>
         <li class="nav-item">
-        {{#if email}}
-            <a class="nav-link" href="/schedule">Schedule</a>
-        {{else}}
-            <a class="nav-link" href="/login">Scheudle</a>
-        {{/if}}
+          {{#if email}}
+              <a class="nav-link" href="/schedule">Schedule</a>
+          {{else}}
+              <a class="nav-link" href="/login">Schedule</a>
+          {{/if}}
         </li>
         <li class="nav-item">
-        <a class="nav-link" href="/logout">Log out</a>
+          <a class="nav-link" href="/logout">Logout</a>
         </li>
       </ul>
     </div>
 
-    <div class="navbar-collapse collapse order-3 dual-collapse2">
-      <ul class="navbar-nav ml-auto">
-          <li class="nav-item">
-              <a class="nav-link" href="#">
-                {{email}}
-              </a>
-          </li>
-          <li class="nav-item">
-            <img src="/resources/img/logo.jpeg" alt="Logo" style="height: 40px;" class="ml-3"/>
-          </li>
+    <div class="navbar-collapse collapse order-3 dual-collapse2 justify-content-end">
+      <ul class="navbar-nav ml-auto align-items-center">
+        <li class="nav-item mr-3">
+          <a class="nav-link font-weight-bold" href="#">
+            {{email}}
+          </a>
+        </li>
+        <li class="nav-item">
+          <img src="/resources/img/logo.jpeg" alt="Logo" style="height: 40px; width: 40px; border-radius: 50%; border: 1px solid #000; background-color: white; padding: 5px;" />
+        </li>
       </ul>
     </div>
   </nav>
