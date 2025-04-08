@@ -73,6 +73,10 @@ app.get('/register', (req, res) => {
   res.render('pages/register');
 });
 
+app.get('/', (req, res) => {
+  res.render('pages/home'); // Ensure 'home.hbs' exists in the views/pages directory
+});
+
 // Handle user registration
 // app.post('/register', async (req, res) => {
 //   try {
@@ -92,7 +96,6 @@ app.get('/register', (req, res) => {
 app.get('/login', (req,res) =>{
   res.render('pages/login')
 });
-
 
 // -------------------------------------  START SERVER   ----------------------------------------------
 
