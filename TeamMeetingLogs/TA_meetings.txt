@@ -3,11 +3,27 @@
 - emphasis on developing a class recommendation feature to set our project apart from others
 - rate my professor API is not a guaranteed feature, but will be added if time allows it
 - working over spring break is not expected
+
 2. Alternative actions/options discussed
 - if team workload becomes unmanegable, Vinay suggested making appropriate adjustments
 - Vinay advised using old data and use common trends to make predictions for class recommendation feature
 - made the rate my professor API not a guaranteed feature
 - Vinay suggested scraping course data through webscraper using js soup
-3. ollow-up items
+
+3. follow-up items
 - all members will begin working on finishing the partials and node.js files for the project
 - some members will also potentially try to start working on html for application pages (login/logout, register)
+
+April 4, 2025 from 4:30- 4:45 pm online
+1. Decisions made:
+- We should all estimate what is remaining and make stories for them, by the next week we can determine how much effort is required, and know how much work to put in. Do this in the Tuesday meeting next week. 
+
+2. Suggestions:
+- Trying to get images to render in the webpage, 
+- Make sure we are all making 2-3 commits per week. 
+
+3. Further actions: 
+- Make user stories for next week, decide on who is going to work on them, give them values. 
+- Make more wireframes
+- Model the pages after the wireframes, make class search page, 
+- Once the scraper is done, work on parsing the data and building a database. 
