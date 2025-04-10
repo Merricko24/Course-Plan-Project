@@ -6,7 +6,7 @@ const path = require('path');
 const pgp = require('pg-promise')();
 const bodyParser = require('body-parser');
 const session = require('express-session');
-// const bcrypt = require('bcrypt'); // Added bcrypt for password hashing
+const bcrypt = require('bcryptjs'); // Added bcrypt for password hashing
 
 // -------------------------------------  APP CONFIG   ----------------------------------------------
 
@@ -73,25 +73,77 @@ app.get('/register', (req, res) => {
   res.render('pages/register');
 });
 
+app.get('/', (req, res) => {
+  res.render('pages/login'); 
+});
+
 // Handle user registration
-// app.post('/register', async (req, res) => {
-//   try {
-//     const { username, password } = req.body;
-//     const hash = await bcrypt.hash(password, 10);
-//     const query = 'INSERT INTO users (username, password) VALUES ($1, $2)';
-//     await db.any(query, [username, hash]);
-//     console.log(`User registered: ${username}`);
-//     res.redirect('/login');
-//   } catch (error) {
-//     console.error('Error Inserting User:', error);
-//     res.redirect('/register');
-//   }
-// });
+// Register API (Add User) /add-user is the register
+
+
+app.post('/register', async (req, res) => {
+  try {
+    const { name, password, identikey } = req.body;
+
+    if (!name || !password || !identikey) {
+      return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    // Validate identikey format: 4 letters followed by 4 digits
+    const identikeyRegex = /^[a-zA-Z]{4}\d{4}$/;
+    if (!identikeyRegex.test(identikey)) {
+      return res.status(400).json({ message: 'Invalid identikey format' });
+    }
+
+    const checkUserQuery = 'SELECT * FROM users WHERE identikey = ?';
+    db.query(checkUserQuery, [identikey], async (err, results) => {
+      if (err) {
+        return res.status(500).json({ message: 'Database error', error: err });
+      }
+
+      if (results.length > 0) {
+        return res.status(400).json({ message: 'User already exists' });
+      }
+
+      // Hash the password before storing
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      const insertUserQuery = 'INSERT INTO users (name, password, identikey) VALUES (?, ?, ?)';
+      db.query(insertUserQuery, [name, hashedPassword, identikey], (err, result) => {
+        if (err) {
+          return res.status(500).json({ message: 'Database error', error: err });
+        }
+        res.status(200).json({ message: 'Success' });
+      });
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
 
 //-----------Login Route--------------
 app.get('/login', (req,res) =>{
   res.render('pages/login')
 });
+
+
+////profile//////////
+// Authentication Required
+
+app.get('/profile', (req, res) => {
+  if (!req.session.user) {
+    return res.status(401).send('Not authenticated');
+  }
+  try {
+    res.status(200).json({
+      username: req.session.user.username,
+    });
+  } catch (err) {
+    console.error('Profile error:', err);
+    res.status(500).send('Internal Server Error');
+  }
+});
+///////////////
 
 
 // -------------------------------------  START SERVER   ----------------------------------------------
