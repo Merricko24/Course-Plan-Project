@@ -140,3 +140,28 @@
   text-decoration: none;
   font-weight: bold;
 }
+
+.custom-btn {
+  background-color: #ccb478;   /* gold */
+  border: 1px solid black;
+  color: black;
+  font-weight: bold;
+  border-radius: 20px;
+  padding: 10px 0;
+  transition: background-color 0.3s ease;
+}
+
+.custom-btn:hover {
+  background-color: #bba35f;   /* darker gold on hover */
+}
+
+.theme-link {
+  color: #aa8d45;           /* Gold tone to match your buttons */
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.theme-link:hover {
+  color: #aa8d45;           /* Slightly darker on hover */
+  text-decoration: underline;
+}
