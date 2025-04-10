@@ -74,7 +74,7 @@ app.get('/register', (req, res) => {
 });
 
 app.get('/', (req, res) => {
-  res.render('pages/home'); // Ensure 'home.hbs' exists in the views/pages directory
+  res.render('pages/login'); 
 });
 
 // Handle user registration
