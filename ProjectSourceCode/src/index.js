@@ -94,6 +94,11 @@ app.get('/login', (req,res) =>{
   res.render('pages/login')
 });
 
+//-----------Logout Route--------------
+app.get('/logout', (req,res) =>{
+  res.render('pages/logout')
+});
+
 
 // -------------------------------------  START SERVER   ----------------------------------------------
 
