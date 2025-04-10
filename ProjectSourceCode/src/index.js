@@ -100,6 +100,10 @@ app.get('/logout', (req,res) =>{
 });
 
 
+app.get('/schedule', (req,res) => {
+  res.render('pages/schedule')
+});
+
 // -------------------------------------  START SERVER   ----------------------------------------------
 
 // Start the server on port 3000
