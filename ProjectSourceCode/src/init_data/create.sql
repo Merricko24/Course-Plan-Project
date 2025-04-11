@@ -3,6 +3,7 @@ DROP TABLE IF EXISTS advisors;
 
 CREATE TABLE students (
   student_id VARCHAR(20) PRIMARY KEY,
+  password VARCHAR(60) NOT NULL
   first_name VARCHAR(50) NOT NULL,
   last_name VARCHAR(50) NOT NULL,
   email VARCHAR(200) NOT NULL,
@@ -14,6 +15,7 @@ CREATE TABLE students (
 );
 CREATE TABLE advisors (
   advisor_id VARCHAR(20) PRIMARY KEY,
+  password VARCHAR(60) NOT NULL
   first_name VARCHAR(50) NOT NULL,
   last_name VARCHAR(50) NOT NULL,
   email VARCHAR(200) NOT NULL,
