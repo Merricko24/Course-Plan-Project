@@ -1,0 +1,198 @@
+{{> message}}
+
+{{> header}} 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Schedule</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../../resources/css/style.css">
+  <style>
+    /* Reset and base styles */
+    * {
+      box-sizing: border-box;
+    }
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+    }
+    
+    /* Main container: sidebar + content area */
+    .main-container {
+      display: flex;
+      min-height: calc(100vh - 40px); /* Reserve space for the footer partial */
+    }
+
+    /* Sidebar for current semester classes */
+    .sidebar {
+      width: 300px;
+      background-color: #ccc;
+      padding: 20px;
+      overflow-y: auto;
+    }
+    .sidebar h2 {
+      text-align: center;
+      margin-top: 0;
+    }
+    .classes-list {
+      list-style: none;
+      padding: 0;
+    }
+    .classes-list li {
+      background-color: #fff;
+      margin-bottom: 10px;
+      padding: 10px;
+      border-radius: 4px;
+    }
+
+    /* Content area for horizontally scrolling semester cards */
+    .content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      padding: 20px;
+    }
+    .scroll-container {
+      flex: 1;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+    .semester {
+      display: inline-block;
+      vertical-align: top;
+      width: 250px;
+      margin-right: 15px;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      background-color: #fff;
+      padding: 15px;
+      box-sizing: border-box;
+      height: 100%;
+    }
+
+    /* Modal styling */
+    #searchBarModal {
+      display: none; 
+      position: fixed;
+      z-index: 999;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5); 
+    }
+    .modal-content {
+      background-color: #fff;
+      margin: 15% auto;
+      padding: 20px;
+      width: 300px;
+      border-radius: 8px;
+      text-align: center;
+      position: relative;
+    }
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 24px;
+      cursor: pointer;
+      color: #999;
+    }
+    .close-btn:hover {
+      color: #333;
+    }
+    input[type="text"] {
+      width: 80%;
+      padding: 8px;
+      margin: 10px 0;
+    }
+    .search-button {
+      padding: 8px 12px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <!-- Main Container -->
+  <div class="main-container">
+    <!-- Sidebar for Current Semester -->
+    <div class="sidebar">
+      <h2>Current Semester</h2>
+      <ul class="classes-list">
+        <li>Math 101</li>
+        <li>History 202</li>
+        <li>Physics 303</li>
+        <li>Chemistry 404</li>
+      </ul>
+    </div>
+
+    <!-- Content Area -->
+    <div class="content">
+      <div class="scroll-container">
+        <div class="semester">
+          <h3>Fall 2023</h3>
+          <button onclick="openSearchBar()">Add Class</button>
+        </div>
+        <div class="semester">
+          <h3>Spring 2024</h3>
+          <button onclick="openSearchBar()">Add Class</button>
+        </div>
+        <div class="semester">
+          <h3>Summer 2024</h3>
+          <button onclick="openSearchBar()">Add Class</button>
+        </div>
+        <div class="semester">
+          <h3>Fall 2024</h3>
+          <button onclick="openSearchBar()">Add Class</button>
+        </div>
+        <div class="semester">
+          <h3>Spring 2025</h3>
+          <button onclick="openSearchBar()">Add Class</button>
+        </div>
+        <div class="semester">
+          <h3>Summer 2025</h3>
+          <button onclick="openSearchBar()">Add Class</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer Partial -->
+  {{> footer}}
+
+  <!-- Modal -->
+  <div id="searchBarModal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeSearchBar()">&times;</span>
+      <h3>Search Class</h3>
+      <input type="text" placeholder="Enter class name..." />
+      <button class="search-button">Search</button>
+    </div>
+  </div>
+
+  <!-- JavaScript -->
+  <script>
+    function openSearchBar() {
+      document.getElementById('searchBarModal').style.display = 'block';
+    }
+    function closeSearchBar() {
+      document.getElementById('searchBarModal').style.display = 'none';
+    }
+    window.onclick = function(event) {
+      const modal = document.getElementById('searchBarModal');
+      if (event.target === modal) {
+        closeSearchBar();
+      }
+    }
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
