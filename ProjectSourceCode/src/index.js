@@ -7,6 +7,7 @@ const pgp = require('pg-promise')();
 const bodyParser = require('body-parser');
 const session = require('express-session');
 // const bcrypt = require('bcrypt'); // Added bcrypt for password hashing
+app.use(express.static(__dirname + ''));
 
 // -------------------------------------  APP CONFIG   ----------------------------------------------
 
@@ -93,6 +94,15 @@ app.get('/login', (req,res) =>{
   res.render('pages/login')
 });
 
+//-----------Logout Route--------------
+app.get('/logout', (req,res) =>{
+  res.render('pages/logout')
+});
+
+//-----------Login Route--------------
+app.get('/schedule', (req,res) => {
+  res.render('pages/schedule')
+});
 
 // -------------------------------------  START SERVER   ----------------------------------------------
 

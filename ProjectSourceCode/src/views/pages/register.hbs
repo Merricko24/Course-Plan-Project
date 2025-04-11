@@ -1,169 +1,77 @@
+{{> message}}
+
+{{> header}} 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registration Page</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f5f5f5;
-        }
-        
-        /* Navigation bar */
-        .navbar {
-            background-color: #f0f0f0;
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #ddd;
-        }
-        
-        .navbar a {
-            color: #333;
-            text-decoration: none;
-            margin-right: 20px;
-            font-weight: bold;
-        }
-        
-        .logo-container {
-            display: flex;
-            align-items: center;
-        }
-        
-        .logo {
-            width: 50px;
-            height: 50px;
-            background-color: #e0e0e0;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-weight: bold;
-        }
-        
-        /* Center logo and form */
-        .center-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-top: 50px;
-        }
-        
-        .center-logo {
-            width: 100px;
-            height: 100px;
-            background-color: #e0e0e0;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-        
-        /* Registration form */
-        .register-form {
-            background-color: #e0e0e0;
-            padding: 20px;
-            border-radius: 5px;
-            width: 350px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-        
-        .register-form h2 {
-            margin-top: 0;
-            margin-bottom: 20px;
-        }
-        
-        .form-group {
-            margin-bottom: 15px;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        
-        .form-group input[type="text"],
-        .form-group input[type="password"] {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 3px;
-            background-color: #f0f0f0;
-            box-sizing: border-box;
-        }
-        
-        .checkbox-group {
-            margin: 20px 0;
-        }
-        
-        .next-btn {
-            background-color: #e0e0e0;
-            color: #333;
-            padding: 10px 40px;
-            border: 1px solid #ccc;
-            border-radius: 20px;
-            cursor: pointer;
-            font-weight: bold;
-            display: block;
-            margin: 0 auto;
-        }
-        
-        .next-btn:hover {
-            background-color: #d0d0d0;
-        }
-        
-        .login-link {
-            text-align: center;
-            margin-top: 15px;
-        }
-        
-        .login-link a {
-            color: #333;
-            text-decoration: none;
-            font-weight: bold;
-        }
-    </style>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../resources/css/style.css">
 </head>
-<body>   
-    <!-- Center content -->
-    <div class="center-content">
-        <div class="center-logo">Logo</div>
-        
-        <!-- Registration form -->
-        <div class="register-form">
-            <h2>Register</h2>
+<body>
+    <div class="container vh-100 d-flex align-items-center justify-content-center">
+        <div class="row w-100 shadow p-3 bg-white rounded">
+            <!-- Logo on the left -->
+            <div class="col-md-6 d-flex align-items-center justify-content-center">
+                <img src="../../resources/img/logo_text.jpeg" alt="Logo" class="img-fluid">
+            </div>
             
-            <form action="/register" method="POST">
-                <div class="form-group">
-                    <label for="username">Username</label>
-                    <input type="text" id="username" name="username" required>
+            <!-- Registration form on the right -->
+            <div class="col-md-6 p-4">
+                <h2 class="text-center">Register</h2>
+                <form id="registrationForm" action="/register" method="POST">
+                    <div class="form-group">
+                        <label for="name">Name (First, Last)</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="username">Identikey</label>
+                        <input type="text" id="username" name="username" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" id="password" name="password" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" name="advisor" id="advisor">
+                        <label class="form-check-label" for="advisor">Are you an Advisor?</label>
+                    </div>
+                    
+                    <button type="submit" class="btn custom-btn w-100">Next</button>
+                </form>
+                <div class="text-center mt-3">
+                    Already have an account? <a href="/login" class="theme-link">Login here</a>
                 </div>
-                
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" required>
-                </div>
-                
-                <div class="checkbox-group">
-                    <label>
-                        <input type="checkbox" name="advisor"> Are you an Advisor?
-                    </label>
-                </div>
-                
-                <button type="submit" class="next-btn">Next</button>
-            </form>
-        </div>
-        
-        <div class="login-link">
-            Already have an account? <a href="#">Login here</a>
+            </div>
         </div>
     </div>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('registrationForm').addEventListener('submit', function(e) {
+            // Prevent form submission to handle redirection
+            e.preventDefault();
+
+            // Check if the "advisor" checkbox is checked
+            var isAdvisor = document.getElementById('advisor').checked;
+            console.log('Checkbox checked:', isAdvisor);
+
+            // Redirect based on the checkbox status
+            if (isAdvisor) {
+                window.location.href = '/register_advisor';
+            } else {
+                window.location.href = '/register_student';
+            }
+        });
+    </script>
+    
+
 </body>
 </html>
