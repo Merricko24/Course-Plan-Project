@@ -1,0 +1,22 @@
+Logic for recomendations feature
+-
+The feature will use the pre-requisite/co-requisite data for the classes to recommend what classes the user should take/add to thier plan.
+-----
+- If the user is planning thier first semester (they dont have any classes) the recommendations will be hard coded based on this site: https://catalog.colorado.edu/undergraduate/colleges-schools/engineering-applied-science/programs-study/computer-science/computer-science-bachelor-science-bscs/#fouryearplantext
+
+- Otherwise, we need to take into account the classes that student has in thier plan. (if they have CSCI 1300, recomend Data Structures. If they have CSCI 3104, recomend OS, PPL, Data science.)
+    - Everytime the class search page is accessed, refresh the recommendations (within the class search page). 
+    - On refresh, display all the classes of which they currently have all the prereq for in thier schedule
+    - If there is a class that they have at least one but not all prereq for -> display both that class and the prereqs for it
+
+- Have an option to display all the prereqs for a class that you search for. 
+
+- If the student puts in a class that they have not taken a prerequisite for
+      - Recommend the prerequisite
+
+
+Questions: 
+- Will we recomend classes for future semesters or also current semesters? 
+- 
+
+
