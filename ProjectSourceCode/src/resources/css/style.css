@@ -1,0 +1,167 @@
+/* Navigation bar */
+.navbar {
+    background-color: #f0f0f0;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .navbar a {
+    color: #333;
+    text-decoration: none;
+    margin-right: 20px;
+    font-weight: bold;
+  }
+  
+  /* New layout */
+  .page-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh; /* Full viewport height */
+  }
+  
+  /* Flexbox container */
+  .center-content {
+    display: flex;
+    width: 100%;
+    height: 100vh; /* Full viewport height */
+  }
+  
+  /* Left Section (Logo) */
+  .left-section {
+    flex: 1; /* Take up 50% of the screen width */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%; /* Full height of the screen */
+  }
+  
+  /* Logo Styles */
+  .center-logo img {
+    max-width: 100%;  /* Makes the image occupy 80% of the left section */
+    height: auto;    /* Maintains aspect ratio */
+  }
+  
+  /* Right Section (Registration Form) */
+  .right-section {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-left: -500px;
+  }
+  
+  /* Logo Styling */
+  .center-logo img {
+    width: 400px; /* Adjust the width of the logo */
+    height: auto; /* Maintain the aspect ratio */
+  }
+  
+  /* Registration Form Container */
+  .register-form {
+    background-color: #e0e0e0; /* light gray */
+    padding: 20px;
+    border-radius: 6px;
+    border: 1px solid black;
+    width: 300px;
+    margin: 0 auto;
+  }
+  
+  /* Button Styling */
+  .btn-gold {
+    background-color: #ccb478;
+    font-weight: bold;
+    border: 1px solid black;
+    border-radius: 20px;
+    padding: 5px 25px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .btn-gold:hover {
+    background-color: #bba35f;
+  }
+  
+  /* Form Groups */
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  
+  /* Form Inputs */
+  .form-group input[type="text"],
+  .form-group input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    background-color: #f0f0f0;
+    box-sizing: border-box;
+  }
+  
+  /* Checkbox Group */
+  .checkbox-group {
+    margin: 20px 0;
+  }
+  
+  /* Submit Button */
+  .next-btn {
+    background-color: #e0e0e0;
+    color: #333;
+    padding: 10px 40px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    display: block;
+    margin: 0 auto;
+  }
+  
+  .next-btn:hover {
+    background-color: #d0d0d0;
+  }
+  
+  /* Login Link */
+  .login-link {
+    text-align: center;
+    margin-top: 15px;
+  }
+  
+  .login-link a {
+    color: #333;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  
+  .custom-btn {
+    background-color: #ccb478;   /* gold */
+    border: 1px solid black;
+    color: black;
+    font-weight: bold;
+    border-radius: 20px;
+    padding: 10px 0;
+    transition: background-color 0.3s ease;
+  }
+  
+  .custom-btn:hover {
+    background-color: #bba35f;   /* darker gold on hover */
+  }
+  
+  .theme-link {
+    color: #aa8d45;           /* Gold tone to match your buttons */
+    font-weight: bold;
+    text-decoration: none;
+  }
+  
+  .theme-link:hover {
+    color: #aa8d45;           /* Slightly darker on hover */
+    text-decoration: underline;
+  }

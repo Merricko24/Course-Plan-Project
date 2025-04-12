@@ -7,10 +7,24 @@
     <link rel="stylesheet" href="/css/styles.css"> <!-- Optional stylesheet -->d
 </head>
 <body>
-    <img src="logo_text.png" alt="Logout Image" /> 
+  <div class="page-content">
+    <!-- Logo on the left -->
+    <div class="left-section">
+      <div class="center-logo">
+        <img src="../../resources/img/logo_text.jpeg" alt="Logo" />
+      </div>
+    </div>
 
-    <h1>Logout Successful</h1>
-    <p>You have been successfully logged out.</p>
-    <a href="/login">Login Again</a>
+    <!-- Logout message on the right -->
+    <div class="right-section">
+      <div class="register-form">
+        <h2>You have been logged out successfully!</h2>
+        <p>Thank you for visiting. You can log in again below.</p>
+        <form action="/login" method="GET">
+          <button type="submit" class="next-btn">Login Again</button>
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

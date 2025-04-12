@@ -8,6 +8,8 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const bcrypt = require('bcryptjs'); // Added bcrypt for password hashing
 
+
+
 // -------------------------------------  APP CONFIG   ----------------------------------------------
 
 // Create an instance of ExpressHandlebars and configure the layouts and partials directories.
@@ -40,6 +42,8 @@ app.use(
     resave: true,
   })
 );
+
+app.use('/resources', express.static(path.join(__dirname, 'resources')));
 
 // -------------------------------------  DB CONFIG AND CONNECT   ---------------------------------------
 const dbConfig = {
@@ -74,7 +78,7 @@ app.get('/register', (req, res) => {
 });
 
 app.get('/', (req, res) => {
-  res.render('pages/login'); 
+  res.render('pages/login');
 });
 
 // Handle user registration
@@ -122,10 +126,19 @@ app.post('/register', async (req, res) => {
 });
 
 //-----------Login Route--------------
-app.get('/login', (req,res) =>{
+app.get('/login', (req, res) => {
   res.render('pages/login')
 });
 
+//-----------Logout Route--------------
+app.get('/logout', (req, res) => {
+  res.render('pages/logout')
+});
+
+//-----------Login Route--------------
+app.get('/schedule', (req, res) => {
+  res.render('pages/schedule')
+});
 
 ////profile//////////
 // Authentication Required
