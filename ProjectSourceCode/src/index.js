@@ -8,7 +8,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const bcrypt = require('bcryptjs'); // Added bcrypt for password hashing
 
-
+app.use('/resources', express.static(path.join(__dirname, 'resources')));
 
 // -------------------------------------  APP CONFIG   ----------------------------------------------
 
@@ -42,8 +42,6 @@ app.use(
     resave: true,
   })
 );
-
-app.use('/resources', express.static(path.join(__dirname, 'resources')));
 
 // -------------------------------------  DB CONFIG AND CONNECT   ---------------------------------------
 const dbConfig = {
