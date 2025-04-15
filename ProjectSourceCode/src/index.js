@@ -9,6 +9,8 @@ const session = require('express-session');
 // const bcrypt = require('bcrypt'); // Added bcrypt for password hashing
 app.use(express.static(__dirname + ''));
 
+app.use('/resources', express.static(path.join(__dirname, 'resources')));
+
 // -------------------------------------  APP CONFIG   ----------------------------------------------
 
 // Create an instance of ExpressHandlebars and configure the layouts and partials directories.
@@ -154,6 +156,8 @@ app.get('/profile', (req, res) => {
   }
 });
 ///////////////
+
+//-----------Courses Route--------------
 
 
 // -------------------------------------  START SERVER   ----------------------------------------------
