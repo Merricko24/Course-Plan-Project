@@ -6,7 +6,10 @@ const path = require('path');
 const pgp = require('pg-promise')();
 const bodyParser = require('body-parser');
 const session = require('express-session');
-const bcrypt = require('bcryptjs'); // Added bcrypt for password hashing
+// const bcrypt = require('bcrypt'); // Added bcrypt for password hashing
+app.use(express.static(__dirname + ''));
+
+app.use('/resources', express.static(path.join(__dirname, 'resources')));
 
 // -------------------------------------  APP CONFIG   ----------------------------------------------
 
@@ -74,7 +77,7 @@ app.get('/register', (req, res) => {
 });
 
 app.get('/', (req, res) => {
-  res.render('pages/login'); 
+  res.render('pages/login');
 });
 
 // Handle user registration
@@ -122,10 +125,24 @@ app.post('/register', async (req, res) => {
 });
 
 //-----------Login Route--------------
-app.get('/login', (req,res) =>{
+app.get('/login', (req, res) => {
   res.render('pages/login')
 });
 
+//-----------Logout Route--------------
+app.get('/logout', (req, res) => {
+  res.render('pages/logout')
+});
+
+//-----------Login Route--------------
+app.get('/schedule', (req, res) => {
+  res.render('pages/schedule')
+});
+
+//-----------Advisor Register After Route--------------
+app.get('/scheduleAdvisor', (req, res) => {
+  res.render('pages/scheduleAdvisor')
+});
 
 ////profile//////////
 // Authentication Required
@@ -144,6 +161,8 @@ app.get('/profile', (req, res) => {
   }
 });
 ///////////////
+
+//-----------Courses Route--------------
 
 
 // -------------------------------------  START SERVER   ----------------------------------------------
