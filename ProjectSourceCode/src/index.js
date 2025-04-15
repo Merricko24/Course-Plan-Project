@@ -139,6 +139,11 @@ app.get('/schedule', (req, res) => {
   res.render('pages/schedule')
 });
 
+//-----------Advisor Register After Route--------------
+app.get('/scheduleAdvisor', (req, res) => {
+  res.render('pages/scheduleAdvisor')
+});
+
 ////profile//////////
 // Authentication Required
 
