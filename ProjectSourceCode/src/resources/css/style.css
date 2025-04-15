@@ -142,26 +142,26 @@
 }
 
 .custom-btn {
-  background-color: #ccb478;   /* gold */
-  border: 1px solid black;
-  color: black;
-  font-weight: bold;
-  border-radius: 20px;
-  padding: 10px 0;
-  transition: background-color 0.3s ease;
+  background-color: #ccb478 !important;   /* gold */
+  border: 1px solid black !important;
+  color: black !important;
+  font-weight: bold !important;
+  border-radius: 20px !important;
+  padding: 10px 0 !important;
+  transition: background-color 0.3s ease !important;
 }
 
 .custom-btn:hover {
-  background-color: #bba35f;   /* darker gold on hover */
+  background-color: #bba35f !important;  /* darker gold on hover */
 }
 
 .theme-link {
-  color: #aa8d45;           /* Gold tone to match your buttons */
+  color: #ccb478;           /* Gold tone to match your buttons */
   font-weight: bold;
   text-decoration: none;
 }
 
 .theme-link:hover {
-  color: #9f833c;           /* Slightly darker on hover */
+  color: #bba35f;           /* Slightly darker on hover */
   text-decoration: underline;
 }
