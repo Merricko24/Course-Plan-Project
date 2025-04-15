@@ -8,8 +8,6 @@ CREATE TABLE students (
   last_name VARCHAR(50) NOT NULL,
   email VARCHAR(200) NOT NULL,
   year VARCHAR(15) NOT NULL,
-  major VARCHAR(30) NOT NULL,
-  degree VARCHAR(15) NOT NULL
   --advisor id assigned to student
   advisor_id VARCHAR(20) 
 );
@@ -34,7 +32,7 @@ CREATE TABLE students_to_advisors (
 
 DROP TABLE IF EXISTS courses;
 CREATE TABLE courses (
-  course_id NUMERIC PRIMARY KEY,
+  course_id VARCHAR(10) PRIMARY KEY,
   course_name VARCHAR(100) NOT NULL,
   credit_hours NUMERIC NOT NULL
 );
