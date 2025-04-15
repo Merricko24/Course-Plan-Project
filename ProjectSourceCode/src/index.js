@@ -99,7 +99,7 @@ app.get('/logout', (req,res) =>{
   res.render('pages/logout')
 });
 
-//-----------Login Route--------------
+//-----------Schedule Route--------------
 app.get('/schedule', (req,res) => {
   res.render('pages/schedule')
 });
