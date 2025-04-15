@@ -3,12 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Schedule</title>
+  <title>Advisor - Student Schedule</title>
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="../../resources/css/style.css" />
   <style>
-    /* Reset and base styles */
     * {
       box-sizing: border-box;
     }
@@ -19,14 +18,12 @@
       font-family: Arial, sans-serif;
       background-color: #f5f5f5;
     }
-    
-    /* Main container: sidebar + content area */
+
     .main-container {
       display: flex;
-      min-height: calc(100vh - 115px); /* Reserve space for the footer partial */
+      min-height: calc(100vh - 115px);
     }
 
-    /* Sidebar for current semester classes */
     .sidebar {
       width: 300px;
       background-color: #ccc;
@@ -48,7 +45,6 @@
       border-radius: 4px;
     }
 
-    /* Content area for horizontally scrolling semester cards */
     .content {
       flex: 1;
       display: flex;
@@ -73,20 +69,31 @@
       box-sizing: border-box;
       height: 100%;
     }
-    /* Container to hold the class blocks added dynamically */
+
     .classes-container {
       margin-bottom: 10px;
     }
-    /* Styling for the added class block */
+
     .class-block {
       background-color: #e9ecef;
       padding: 8px;
       margin-bottom: 5px;
       border-radius: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .class-block button {
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 2px 8px;
+      font-size: 12px;
       cursor: pointer;
     }
 
-    /* Modal styling */
     #searchBarModal {
       display: none; 
       position: fixed;
@@ -133,7 +140,8 @@
   <div class="main-container">
     <!-- Sidebar for Current Semester -->
     <div class="sidebar">
-      <h2>Current Semester</h2>
+      <h2>Advisor View</h2>
+      <h4>Current Semester</h4>
       <ul class="classes-list">
         <li>Math 101</li>
         <li>History 202</li>
@@ -145,7 +153,6 @@
     <!-- Content Area -->
     <div class="content">
       <div class="scroll-container">
-        <!-- Each semester now has a container for class blocks and its Add Class button -->
         <div class="semester">
           <h3>Fall 2023</h3>
           <div class="classes-container"></div>
@@ -189,93 +196,55 @@
       <span class="close-btn" onclick="closeSearchBar()">&times;</span>
       <h3>Search Class</h3>
       <input type="text" id="classNameInput" placeholder="Enter class name..." />
-      <button class="search-button" onclick="addClassFromModal()">Search</button>
+      <button class="search-button" onclick="addClassFromModal()">Add</button>
     </div>
   </div>
 
   <!-- JavaScript -->
   <script>
-    // Global variable to keep track of the Add Class button that invoked the modal
     let currentButton = null;
-    
-    // When an Add Class button is clicked, open the modal and save a reference to the button
+
     function openSearchBar(button) {
       currentButton = button;
       document.getElementById('searchBarModal').style.display = 'block';
     }
-    
+
     function closeSearchBar() {
       document.getElementById('searchBarModal').style.display = 'none';
     }
-    
-    // Close modal if the user clicks outside of its content area
+
     window.onclick = function(event) {
       const modal = document.getElementById('searchBarModal');
       if (event.target === modal) {
         closeSearchBar();
       }
     }
-    
-    // This function gets called when the Search button in the modal is clicked
+
     function addClassFromModal() {
       let className = document.getElementById('classNameInput').value.trim();
       if (className === "") {
         alert("Please enter a class name");
         return;
       }
-      // Find the semester card (parent of the button) and its classes container
+
       let semesterDiv = currentButton.parentNode;
       let classesContainer = semesterDiv.querySelector('.classes-container');
-      
-      // Create a new div element to represent the added class
+
       let classBlock = document.createElement("div");
       classBlock.className = "class-block";
-      classBlock.textContent = className;
-      
-      // When clicking the class block, show an information bubble
-      classBlock.onclick = function(event) {
-        showInfoBubble(event, className);
-      }
-      
-      // Append the new class block into the container; the Add Class button stays at the bottom,
-      // so it will be pushed down as new items are added.
+      classBlock.innerHTML = `
+        <span>${className}</span>
+        <button onclick="removeClass(this)">Remove</button>
+      `;
+
       classesContainer.appendChild(classBlock);
-      
-      // Clear the input and close the modal
+
       document.getElementById('classNameInput').value = "";
       closeSearchBar();
     }
-    
-    // This function creates an information bubble near the clicked class block.
-    function showInfoBubble(event, className) {
-      let bubble = document.createElement("div");
-      bubble.className = "info-bubble";
-      bubble.textContent = "More info about " + className;
-      // Style the bubble
-      bubble.style.position = "absolute";
-      bubble.style.backgroundColor = "#fff";
-      bubble.style.border = "1px solid #ccc";
-      bubble.style.padding = "5px";
-      bubble.style.borderRadius = "4px";
-      bubble.style.boxShadow = "0px 2px 6px rgba(0,0,0,0.2)";
-      
-      // Position the bubble relative to the clicked element
-      let rect = event.target.getBoundingClientRect();
-      bubble.style.top = (rect.top + window.scrollY) + "px";
-      bubble.style.left = (rect.right + 10 + window.scrollX) + "px";
-      bubble.style.zIndex = "1000";
-      
-      document.body.appendChild(bubble);
-      
-      // Allow the bubble to be dismissed on click or after a few seconds
-      bubble.onclick = function() {
-        document.body.removeChild(bubble);
-      };
-      setTimeout(function(){
-        if (document.body.contains(bubble)) {
-          document.body.removeChild(bubble);
-        }
-      }, 3000);
+
+    function removeClass(button) {
+      button.closest('.class-block').remove();
     }
   </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
