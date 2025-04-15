@@ -15,9 +15,9 @@ INSERT INTO advisors (advisor_id, password, first_name, last_name, email, studen
 )
 
 INSERT INTO courses (course_id, course_name, credit_hours) VALUES (
-    ('CSCI1300', 'Introduction to Computer Science', 3),
-    ('CSCI2270', 'Data Structures', 4),
-    ('CSCI3287', 'Database Systems', 3),
-    ('CSCI3753', 'Operating Systems', 3),
-    ('CSCI 5828', 'Software Engineering', 4)
+    ('CSCI1300', 'Introduction to Computer Science', 3, NULL),
+    ('CSCI2270', 'Data Structures', 4, ['CSCI1300']),
+    ('CSCI3287', 'Database Systems', 3, ['CSCI1300', 'CSCI2270']),
+    ('CSCI3753', 'Operating Systems', 3, ['CSCI3287']),
+    ('CSCI 5828', 'Software Engineering', 4, ['CSCI3753', 'CSCI3287']),
 );
