@@ -1,6 +1,6 @@
 /* Navigation bar */
 .navbar {
-  background-color: #f0f0f0;
+  background-color: #c8b273;
   padding: 10px 20px;
   display: flex;
   justify-content: space-between;
@@ -162,6 +162,6 @@
 }
 
 .theme-link:hover {
-  color: #aa8d45;           /* Slightly darker on hover */
+  color: #9f833c;           /* Slightly darker on hover */
   text-decoration: underline;
 }
