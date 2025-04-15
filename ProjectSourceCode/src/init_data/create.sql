@@ -8,8 +8,6 @@ CREATE TABLE students (
   last_name VARCHAR(50) NOT NULL,
   email VARCHAR(200) NOT NULL,
   year VARCHAR(15) NOT NULL,
-  major VARCHAR(30) NOT NULL,
-  degree VARCHAR(15) NOT NULL
   --advisor id assigned to student
   advisor_id VARCHAR(20) 
 );
@@ -36,7 +34,15 @@ DROP TABLE IF EXISTS courses;
 CREATE TABLE courses (
   course_id NUMERIC PRIMARY KEY,
   course_name VARCHAR(100) NOT NULL,
-  credit_hours NUMERIC NOT NULL
+  credit_hours NUMERIC NOT NULL,
+  max_enrollment INT,
+  current_enrollment INT DEFAULT 0,
+  start_date DATE,
+  end_date DATE,
+  start_time TIME,
+  end_date TIME,
+  days VARCHAR(50),
+  status VARCHAR(50) DEFAULT 'Open'
 );
 
 DROP TABLE IF EXISTS student_courses;
@@ -51,17 +57,3 @@ CREATE TABLE IF NOT EXISTS prerequisites (
   prerequisite_id INTEGER NOT NULL REFERENCES courses (course_id)
 );
 
-DROP TABLE IF EXISTS courses;
-CREATE TABLE courses(
-    course_id NUMERIC PRIMARY KEY,
-    course_code VARCHAR(50) NOT NULL,
-    credit_hours INT NOT NULL,
-    max_enrollment INT,
-    current_enrollment INT DEFAULT 0,
-    start_date DATE,
-    end_date DATE,
-    start_time TIME,
-    end_date TIME,
-    days VARCHAR(50),
-    status VARCHAR(50) DEFAULT 'Open'
-);
