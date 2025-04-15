@@ -124,8 +124,8 @@ app.post('/register', async (req, res) => {
 });
 
 //-----------Login Route--------------
-app.get('/login', (req, res) => {
-  res.render('pages/login')
+app.get('/schedule', (req, res) => {
+  res.render('pages/schedule')
 });
 
 //-----------Logout Route--------------
