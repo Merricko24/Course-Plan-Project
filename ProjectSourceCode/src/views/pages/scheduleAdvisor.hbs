@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Advisor View - Schedule</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <link rel="stylesheet" href="../../resources/css/style.css" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="../../resources/css/style.css"/>
   <style>
     .class-block {
       background-color: #e9ecef;
@@ -60,20 +60,25 @@
     .close-btn:hover {
       color: #333;
     }
+
+    .student-info {
+      background-color: #f8f9fa;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
   </style>
 </head>
 <body>
   <div class="main-container">
-    <!-- Sidebar for Current Semester -->
+    <!-- Sidebar for Student Selection -->
     <div class="sidebar">
       <h2>Advisor View</h2>
-      <h4>Current Semester</h4>
-      <ul class="classes-list">
-        <li>Math 101</li>
-        <li>History 202</li>
-        <li>Physics 303</li>
-        <li>Chemistry 404</li>
-      </ul>
+      <label for="studentSelect">Select Student:</label>
+      <select id="studentSelect" class="form-select mb-3" onchange="loadStudentInfo()">
+        <option disabled selected value="">-- Choose Student --</option>
+      </select>
+      <div id="studentInfo" class="student-info"></div>
     </div>
 
     <!-- Content Area -->
@@ -114,9 +119,6 @@
     </div>
   </div>
 
-  <!-- Footer Partial -->
-  {{> footer}}
-
   <!-- Modal -->
   <div id="searchBarModal">
     <div class="modal-content">
@@ -127,8 +129,50 @@
     </div>
   </div>
 
-  <!-- JavaScript -->
+  <!-- Footer Partial -->
+  {{> footer}}
+
+  <!-- JavaScript: Advisor & Student Logic -->
   <script>
+    const advisorId = 'umar1234'; // This would be dynamically set by backend auth
+
+    const advisors = {
+      'umar1234': ['test1234', 'joab1234'],
+      'eche1337': ['coca9230', 'bpit2018']
+    };
+
+    const students = {
+      'test1234': { first_name: 'Test', last_name: 'User', email: 'test@colorado.edu', year: 'Senior', major: 'Computer Science', degree: 'BSCS' },
+      'joab1234': { first_name: 'John', last_name: 'Applebee', email: 'joab1234@colorado.edu', year: 'Freshman', major: 'Psychology', degree: 'BSPSYCH' },
+      'coca9230': { first_name: 'Coleman', last_name: 'Caldwell', email: 'coca9230@colorado.edu', year: 'Senior', major: 'Info Science', degree: 'BSINFO' },
+      'bpit2018': { first_name: 'Brad', last_name: 'Pitt', email: 'bpit2018@colorado.edu', year: 'Sophomore', major: 'Business', degree: 'BSBN' }
+    };
+
+    // Populate dropdown
+    window.onload = function () {
+      const select = document.getElementById('studentSelect');
+      const studentIds = advisors[advisorId];
+      studentIds.forEach(id => {
+        const option = document.createElement('option');
+        option.value = id;
+        option.textContent = students[id].first_name + ' ' + students[id].last_name;
+        select.appendChild(option);
+      });
+    };
+
+    function loadStudentInfo() {
+      const studentId = document.getElementById('studentSelect').value;
+      const student = students[studentId];
+      document.getElementById('studentInfo').innerHTML = `
+        <strong>${student.first_name} ${student.last_name}</strong><br>
+        Email: ${student.email}<br>
+        Year: ${student.year}<br>
+        Major: ${student.major}<br>
+        Degree: ${student.degree}
+      `;
+    }
+
+    // Existing Modal & Class Add/Remove JS
     let currentButton = null;
 
     function openSearchBar(button) {
@@ -140,16 +184,14 @@
       document.getElementById('searchBarModal').style.display = 'none';
     }
 
-    window.onclick = function(event) {
+    window.onclick = function (event) {
       const modal = document.getElementById('searchBarModal');
-      if (event.target === modal) {
-        closeSearchBar();
-      }
-    }
+      if (event.target === modal) closeSearchBar();
+    };
 
     function addClassFromModal() {
       let className = document.getElementById('classNameInput').value.trim();
-      if (className === "") {
+      if (!className) {
         alert("Please enter a class name");
         return;
       }
@@ -159,16 +201,11 @@
 
       let classBlock = document.createElement("div");
       classBlock.className = "class-block";
-      classBlock.innerHTML = `
-        <span>${className}</span>
-        <button onclick="removeClass(this)">Remove</button>
-      `;
+      classBlock.innerHTML = `<span>${className}</span><button onclick="removeClass(this)">Remove</button>`;
 
-      classBlock.onclick = function(event) {
-        if (event.target.tagName !== 'BUTTON') {
-          showInfoBubble(event, className);
-        }
-      }
+      classBlock.onclick = function (event) {
+        if (event.target.tagName !== 'BUTTON') showInfoBubble(event, className);
+      };
 
       classesContainer.appendChild(classBlock);
       document.getElementById('classNameInput').value = "";
@@ -183,30 +220,21 @@
       let bubble = document.createElement("div");
       bubble.className = "info-bubble";
       bubble.textContent = "More info about " + className;
-      bubble.style.position = "absolute";
-      bubble.style.backgroundColor = "#fff";
-      bubble.style.border = "1px solid #ccc";
-      bubble.style.padding = "5px";
-      bubble.style.borderRadius = "4px";
-      bubble.style.boxShadow = "0px 2px 6px rgba(0,0,0,0.2)";
-      
+      Object.assign(bubble.style, {
+        position: "absolute", backgroundColor: "#fff", border: "1px solid #ccc",
+        padding: "5px", borderRadius: "4px", boxShadow: "0px 2px 6px rgba(0,0,0,0.2)", zIndex: 1000
+      });
+
       let rect = event.target.getBoundingClientRect();
       bubble.style.top = (rect.top + window.scrollY) + "px";
       bubble.style.left = (rect.right + 10 + window.scrollX) + "px";
-      bubble.style.zIndex = "1000";
 
       document.body.appendChild(bubble);
-
-      bubble.onclick = function() {
-        document.body.removeChild(bubble);
-      };
-      setTimeout(function() {
-        if (document.body.contains(bubble)) {
-          document.body.removeChild(bubble);
-        }
+      bubble.onclick = () => document.body.removeChild(bubble);
+      setTimeout(() => {
+        if (document.body.contains(bubble)) document.body.removeChild(bubble);
       }, 3000);
     }
   </script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
