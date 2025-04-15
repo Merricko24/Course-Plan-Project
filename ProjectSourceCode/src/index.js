@@ -6,8 +6,8 @@ const path = require('path');
 const pgp = require('pg-promise')();
 const bodyParser = require('body-parser');
 const session = require('express-session');
-const bcrypt = require('bcryptjs'); // Added bcrypt for password hashing
-app.use(express.static(path.join(__dirname, '')));
+// const bcrypt = require('bcrypt'); // Added bcrypt for password hashing
+app.use(express.static(__dirname + ''));
 
 // -------------------------------------  APP CONFIG   ----------------------------------------------
 
