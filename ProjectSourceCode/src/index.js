@@ -134,10 +134,32 @@ app.get('/logout', (req, res) => {
   res.render('pages/logout')
 });
 
-//-----------Login Route--------------
-app.get('/schedule', (req, res) => {
-  res.render('pages/schedule')
+//----------Schedule page Routes--------------
+// app.get('/schedule', (req, res) => {
+//   res.render('pages/schedule')
+// });
+
+
+////RUN docker and TEST NEW SCHEDULE THING/////////
+
+
+const express = require('express');
+const router = express.Router();
+const pool = require('../inde');
+
+app.get('/schedule', async (req, res) => {
+
+  try {
+    const coursesResult = await db.query('SELECT * FROM courses;');
+    // Pass the courses data to the template as JSON data
+    res.render('pages/schedule', { courses: JSON.stringify(coursesResult.rows) });
+  } catch (err) {
+    console.error('Error retrieving courses for schedule:', err);
+    res.status(500).send('Server Error');
+  }
+
 });
+
 
 //-----------Advisor Register After Route--------------
 app.get('/scheduleAdvisor', (req, res) => {

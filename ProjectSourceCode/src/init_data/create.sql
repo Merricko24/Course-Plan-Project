@@ -10,7 +10,7 @@ CREATE TABLE students (
   year VARCHAR(15) NOT NULL,
   --advisor id assigned to student
   advisor_id VARCHAR(20) 
-  taken_courses VARCHAR(50)[],
+  taken_courses VARCHAR(50)[]
 );
 CREATE TABLE advisors (
   identikey VARCHAR(20) PRIMARY KEY,
@@ -36,8 +36,7 @@ CREATE TABLE courses (
   course_id NUMERIC PRIMARY KEY,
   course_name VARCHAR(100) NOT NULL,
   credit_hours NUMERIC NOT NULL,
-  prerequisites VARCHAR(50)[],
-
+  prerequisites VARCHAR(50)[]
 );
 
 DROP TABLE IF EXISTS student_courses;
