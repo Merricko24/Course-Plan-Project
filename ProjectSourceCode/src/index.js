@@ -86,9 +86,9 @@ app.get('/', (req, res) => {
 
 app.post('/register', async (req, res) => {
   try {
-    const { name, password, identikey } = req.body;
+    const { first_name, last_name, password, identikey } = req.body;
 
-    if (!name || !password || !identikey) {
+    if (!first_name || !last_name || !password || !identikey) {
       return res.status(400).json({ message: 'All fields are required' });
     }
 
