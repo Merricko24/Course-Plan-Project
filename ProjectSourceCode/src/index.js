@@ -6,7 +6,7 @@ const path = require('path');
 const pgp = require('pg-promise')();
 const bodyParser = require('body-parser');
 const session = require('express-session');
-// const bcrypt = require('bcrypt'); // Added bcrypt for password hashing
+ const bcrypt = require('bcryptjs'); // Added bcrypt for password hashing
 app.use(express.static(__dirname + ''));
 
 app.use('/resources', express.static(path.join(__dirname, 'resources')));
@@ -86,41 +86,42 @@ app.get('/', (req, res) => {
 
 app.post('/register', async (req, res) => {
   try {
-    const { first_name, last_name, password, identikey } = req.body;
-
+    const { first_name, last_name, identikey, password, isAdvisor} = req.body;
     if (!first_name || !last_name || !password || !identikey) {
       return res.status(400).json({ message: 'All fields are required' });
     }
-
     // Validate identikey format: 4 letters followed by 4 digits
     const identikeyRegex = /^[a-zA-Z]{4}\d{4}$/;
     if (!identikeyRegex.test(identikey)) {
       return res.status(400).json({ message: 'Invalid identikey format' });
     }
+  
+    const studentOrAdvisor = isAdvisor == 'on' ? 'advisors' : 'students';
 
-    const checkUserQuery = 'SELECT * FROM users WHERE identikey = ?';
-    db.query(checkUserQuery, [identikey], async (err, results) => {
-      if (err) {
-        return res.status(500).json({ message: 'Database error', error: err });
-      }
-
-      if (results.length > 0) {
+    await db.oneOrNone(`SELECT * FROM ${studentOrAdvisor} WHERE identikey = '${identikey}'`)
+    .then(async (existingUser) => {
+      if (existingUser) {
         return res.status(400).json({ message: 'User already exists' });
       }
+
 
       // Hash the password before storing
       const hashedPassword = await bcrypt.hash(password, 10);
 
-      const insertUserQuery = 'INSERT INTO users (name, password, identikey) VALUES (?, ?, ?)';
-      db.query(insertUserQuery, [name, hashedPassword, identikey], (err, result) => {
-        if (err) {
-          return res.status(500).json({ message: 'Database error', error: err });
-        }
-        res.status(200).json({ message: 'Success' });
-      });
+       const insertUserQuery = `INSERT INTO ${studentOrAdvisor} (first_name, last_name, password, identikey) VALUES ('${first_name}', '${last_name}', '${hashedPassword}', '${identikey}')`;
+       db.any(insertUserQuery)
+       .then(() => {
+
+          // Registration successful
+          res.status(201).json({ message: 'User registered successfully' });
+        })
+        .finally(() => {
+          res.render('pages/schedule')
+        });
     });
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
+    console.error('Error during registration:', error);
+    res.status(500).json({ message: 'Internal server error' });
   }
 });
 
@@ -129,9 +130,76 @@ app.get('/login', (req, res) => {
   res.render('pages/login')
 });
 
+app.post('/login', async (req, res) =>  {
+  const {identikey, password} = req.body;
+try {
+    if(!identikey || !password) {
+      return res.status(400).json({ message: 'All fields are required' });
+    }
+    //check if advisor or student
+    const advisor = await db.oneOrNone(`SELECT identikey FROM advisors WHERE identikey = '${identikey}'`)
+    const student = await db.oneOrNone(`SELECT identikey FROM students WHERE identikey = '${identikey}'`)
+    
+    if(!advisor && !student) {
+      return res.status(400).json({ message: 'User does not exist' });
+    }
+    let a_or_s = null;
+    if(advisor) {
+      a_or_s = 'advisors';
+    }
+    if(student) {
+      a_or_s = 'students';
+    }
+    //check if password is correct
+    const user = await db.oneOrNone(`SELECT password FROM ${a_or_s} WHERE identikey = '${identikey}'`);
+    const match = await bcrypt.compare(password, user.password);
+    if(match) {
+       // console.log("Login success");
+            user.identikey = identikey;
+            user.password = password;
+            req.session.user = user;
+            req.session.save();
+    }
+
+    // Redirect to the appropriate page based on user type
+    if (a_or_s === 'advisors') {
+      res.redirect('/scheduleAdvisor', {
+        user: req.session.user,
+      });
+    } else {
+      //redirect to student schedule
+      res.redirect('/schedule');
+    }
+  } 
+ 
+ catch (error) {
+    console.error('Error during login:', error);
+    return res.status(500).json({ message: 'Internal server error' });
+ }
+
+  
+});
+
+// Authentication Middleware.
+const auth = (req, res, next) => {
+  if (!req.session.user) {
+    // Default to login page.
+    return res.redirect('/login');
+  }
+  next();
+};
+
+// Authentication Required
+app.use(auth);
+
+
+
+
+
 //-----------Logout Route--------------
 app.get('/logout', (req, res) => {
   res.render('pages/logout')
+  req.session.destroy();
 });
 
 //-----------Login Route--------------
@@ -153,7 +221,7 @@ app.get('/profile', (req, res) => {
   }
   try {
     res.status(200).json({
-      username: req.session.user.username,
+      user: req.session.user,
     });
   } catch (err) {
     console.error('Profile error:', err);

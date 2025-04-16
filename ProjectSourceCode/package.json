@@ -25,4 +25,3 @@
     "testandrun": "npm run prestart && npm run test && npm start"
   }
 }
-

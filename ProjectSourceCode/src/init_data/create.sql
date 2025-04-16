@@ -2,21 +2,21 @@ DROP TABLE IF EXISTS students;
 DROP TABLE IF EXISTS advisors;
 
 CREATE TABLE students (
-  identikey VARCHAR(20) PRIMARY KEY,
+  identikey VARCHAR(20) PRIMARY KEY NOT NULL,
   password VARCHAR(60) NOT NULL,
   first_name VARCHAR(50) NOT NULL,
   last_name VARCHAR(50) NOT NULL,
-  email VARCHAR(200) NOT NULL,
-  year VARCHAR(15) NOT NULL,
+  email VARCHAR(200),
+  year VARCHAR(15),
   advisor_id VARCHAR(20),
   taken_courses VARCHAR(50)[]
 );
 CREATE TABLE advisors (
-  identikey VARCHAR(20) PRIMARY KEY,
+  identikey VARCHAR(20) PRIMARY KEY NOT NULL,
   password VARCHAR(60) NOT NULL,
   first_name VARCHAR(50) NOT NULL,
   last_name VARCHAR(50) NOT NULL,
-  email VARCHAR(200) NOT NULL,
+  email VARCHAR(200),
   --array of students per advisor
   student_ids VARCHAR(20)[]
 );
@@ -38,15 +38,6 @@ CREATE TABLE courses (
 
 );
 
-DROP TABLE IF EXISTS student_courses;
-CREATE TABLE student_courses (
-  course_id VARCHAR(20) NOT NULL REFERENCES courses (course_id),
-  student_id VARCHAR(20) NOT NULL REFERENCES students (identikey)
-);
-  
-DROP TABLE IF EXISTS prerequisites;
-CREATE TABLE IF NOT EXISTS prerequisites (
-  course_id VARCHAR(20) NOT NULL REFERENCES courses (course_id),
-  prerequisite_id VARCHAR(20) NOT NULL REFERENCES courses (course_id)
-);
+
+
 
