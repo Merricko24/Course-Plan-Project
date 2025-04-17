@@ -288,3 +288,44 @@
       margin-bottom: 10px;
       cursor: pointer;
     }
+
+
+    /* For Semester slots in shedule page */
+    .classes-container {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    .slot {
+      flex: 1;                     /* equally share height */
+      min-height: 50px;            /* visible even if empty */
+      border: 1px dashed #ccc;
+      position: relative;          /* for positioning a dragged item back in */
+    }
+    
+    .class-block {
+      background: #e9ecef;
+      padding: 8px;
+      border-radius: 4px;
+      cursor: move;
+      position: absolute;          /* we’ll absolutely position inside its slot */
+      top: 0; left: 0; right: 0; bottom: 0;
+    }
+    
+
+
+    /* when you’re dragging, lift the block out of the slot and fix its size */
+    .class-block.dragging {
+      position: fixed !important;     /* float over everything */
+      z-index: 1000;
+      pointer-events: none;           /* let the slots beneath get the mouse */
+      opacity: 0.9;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      cursor: grabbing;
+    }
+
+/* optional: make it look “lighter” while you drag
+.class-block.dragging {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+} */

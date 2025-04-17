@@ -23,54 +23,47 @@
     </div>
 
     <!-- Content Area -->
-    <div class="content" style="position: relative;">
-
-         <!-- SVG sits on top of everything, capturing no pointer events -->
-        <svg id="prereq-svg"
-            style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none;">
-        </svg>
-
-
+    <div class="content">
       <div class="scroll-container">
         <!-- Each semester now has a container for class blocks and its Add Class button -->
         <div class="semester">
           <h3>Semester 1</h3>
-          <div class="classes-container"></div>
+          <div id = "sem0"class="classes-container"></div>
           <button onclick="openSearchBar(this)" class="btn custom-btn w-100">Add Class</button>
         </div>
         <div class="semester">
           <h3>Semester 2</h3>
-          <div class="classes-container"></div>
+          <div id = "sem1" class="classes-container"></div>
           <button onclick="openSearchBar(this)" class="btn custom-btn w-100">Add Class</button>
         </div>
         <div class="semester">
           <h3>Semester 3</h3>
-          <div class="classes-container"></div>
+          <div id = "sem2" class="classes-container"></div>
           <button onclick="openSearchBar(this)" class="btn custom-btn w-100">Add Class</button>
         </div>
         <div class="semester">
           <h3>Semester 4</h3>
-          <div class="classes-container"></div>
+          <div id = "sem3" class="classes-container"></div>
           <button onclick="openSearchBar(this)" class="btn custom-btn w-100">Add Class</button>
         </div>
         <div class="semester">
           <h3>Semester 5</h3>
-          <div class="classes-container"></div>
+          <div id = "sem4" class="classes-container"></div>
           <button onclick="openSearchBar(this)" class="btn custom-btn w-100">Add Class</button>
         </div>
         <div class="semester">
           <h3>Semester 6</h3>
-          <div class="classes-container"></div>
+          <div id = "sem5" class="classes-container"></div>
           <button onclick="openSearchBar(this)" class="btn custom-btn w-100">Add Class</button>
         </div>
         <div class="semester">
           <h3>Semester 7</h3>
-          <div class="classes-container"></div>
+          <div id = "sem6" class="classes-container"></div>
           <button onclick="openSearchBar(this)" class="btn custom-btn w-100">Add Class</button>
         </div>
         <div class="semester">
           <h3>Semester 8</h3>
-          <div class="classes-container"></div>
+          <div id = "sem7" class="classes-container"></div>
           <button onclick="openSearchBar(this)" class="btn custom-btn w-100">Add Class</button>
         </div>
       </div>
@@ -122,45 +115,13 @@
       }
     }
     
-    // This function gets called when the add button in the modal is clicked
-    function addClassFromModal(className, classId, classCredits) {
-      if (className === "") {
-        alert("Please enter a class name");
-        return;
-      }
-      // Find the semester card (parent of the button) and its classes container
-      let semesterDiv = currentButton.parentNode;
-      let classesContainer = semesterDiv.querySelector('.classes-container');
-      
-      // Create a new div element to represent the added class
-      let classBlock = document.createElement("div");
-      classBlock.className = "class-block";
-      classBlock.textContent = className;
 
-        classBlock.dataset.courseId     = classId;
-        classBlock.dataset.creditHours  = creditHours;
-        classBlock.dataset.courseName   = className;
-
-      
-      // When clicking the class block, show an information bubble
-      classBlock.onclick = function(event) {
-        showInfoBubble(event, this.dataset.courseId, this.dataset.creditHours, this.dataset.courseName);
-      }
-      
-      // Append the new class block into the container; the Add Class button stays at the bottom,
-      // so it will be pushed down as new items are added.
-      classesContainer.appendChild(classBlock);
-      
-      // Clear the input and close the modal
-      document.getElementById('classNameInput').value = "";
-      closeSearchBar();
-    }
     
     // This function creates an information bubble near the clicked class block.
-    function showInfoBubble(event, classID, creditHours, className) {
+    function showInfoBubble(event, className) {
       let bubble = document.createElement("div");
       bubble.className = "info-bubble";
-      bubble.textContent = "More info about " + className + ":\n" + "Course ID: " + classID + "\nCredit Hours: " + creditHours;
+      bubble.textContent = "More info about " + className;
       // Style the bubble
       bubble.style.position = "absolute";
       bubble.style.backgroundColor = "#fff";
@@ -190,121 +151,133 @@
   </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-
-
-    <script src="https://d3js.org/d3.v6.min.js"></script>
+        {{!-- ----------------D3 library Script----------------------- --}}
+        <script src="https://d3js.org/d3.v6.min.js"></script>
     <script>
-    // 1. Parse the injected data:
-    const courses = JSON.parse('{{{courses}}}');
-    
-    // 2. Build nodes & links:
-    const nodes = courses.map(c => ({ id: c.course_id, name: c.course_name, semester: null }));
-    const links = [];
-    courses.forEach(c => {
-        if (c.prerequisites) {
-        c.prerequisites.forEach(pr => links.push({ source: pr, target: c.course_id }));
+  // 1) Our in-memory schedule: 8 semesters × 6 slots each
+  const schedule = Array.from({length: 8}, _ => Array(6).fill(null));
+
+  // 2) Helper to redraw all semesters
+  function updateUI() {
+    schedule.forEach((slots, semIdx) => {
+      // select the container by its id (sem0, sem1, …)
+      const container = d3.select(`#sem${semIdx}`);
+      
+      // Bind slot data
+      const slotSel = container.selectAll('.slot')
+        .data(slots, (_, i) => i);
+
+      // ENTER empty slots
+      slotSel.enter()
+        .append('div')
+          .classed('slot', true)
+        .merge(slotSel)
+        .each(function(data, slotIdx) {
+          d3.select(this).selectAll('div.class-block').remove();
+          if (data) {
+            // If there's a class in this slot, render it
+            d3.select(this)
+              .append('div')
+                .classed('class-block', true)
+                .text(data.name)
+                .attr('data-course-id', data.id)
+                .call(d3.drag()
+                  .on('start', dragstarted)
+                  .on('drag', dragged)
+                  .on('end', dragended)
+                );
+          }
+        });
+
+      // EXIT any extra slots (shouldn't happen, but safe)
+      slotSel.exit().remove();
+    });
+  }
+
+  // 3) Add a new class into the first available slot in the clicked semester
+  function addClassFromModal(id, name, credits) {
+    // find which sem button opened the modal
+    const semIdx = +currentButton.parentNode.id.replace('sem',''); 
+    const slots = schedule[semIdx];
+    const empty = slots.indexOf(null);
+    if (empty === -1) return alert('No room in that semester');
+    slots[empty] = {id, name, credits};
+    updateUI();
+    closeSearchBar();
+  }
+
+  // 4) D3 drag handlers
+  let dragging = null;
+
+  function dragstarted(event, d) {
+    const node = this;
+    const rect = node.getBoundingClientRect();
+
+    // record where inside the box we clicked
+    d._offsetX = event.x - rect.left;
+    d._offsetY = event.y - rect.top;
+
+    dragging = {
+      data: d,
+      semIdx: +node.parentNode.parentNode.id.replace('sem',''),
+      slotIdx: Array.from(node.parentNode.parentNode.children)
+                     .indexOf(node.parentNode)
+    };
+
+    d3.select(node)
+      .classed('dragging', true)
+      .style('width',  rect.width  + 'px')
+      .style('height', rect.height + 'px');
+  }
+
+  function dragged(event, d) {
+    // move using the original click offset
+    d3.select(this)
+      .style('left', (event.x - d._offsetX) + 'px')
+      .style('top',  (event.y - d._offsetY) + 'px');
+  }
+
+  function dragended(event, d) {
+    const node = this;
+    // remove dragging styles
+    d3.select(node)
+      .classed('dragging', false)
+      .style('width', null)
+      .style('height', null)
+      .style('left', null)
+      .style('top', null);
+
+    // find drop target
+    const [x,y] = [event.sourceEvent.clientX, event.sourceEvent.clientY];
+    let dest = null;
+    schedule.forEach((slots, semIdx) => {
+      const cont = document.getElementById(`sem${semIdx}`);
+      cont.querySelectorAll('.slot').forEach((slotEl, slotIdx) => {
+        const r = slotEl.getBoundingClientRect();
+        if (x >= r.left && x <= r.right && y >= r.top && y <= r.bottom) {
+          dest = {semIdx, slotIdx};
         }
+      });
     });
 
-    // 3. Set up SVG and semester zones:
-    const svg = d3.select('#graph');
-    const width = +svg.attr('width'), height = +svg.attr('height');
-    const zoneHeight = 100;
-    const zones = d3.range(8).map(i => ({
-        x: (width/8)*i, y: height - zoneHeight, w: width/8, h: zoneHeight, semester: i+1
-    }));
-    svg.selectAll('rect.zone')
-        .data(zones).enter().append('rect')
-        .attr('class','zone')
-        .attr('x', d=>d.x).attr('y', d=>d.y)
-        .attr('width', d=>d.w).attr('height', d=>d.h)
-        .style('fill','#eee').style('stroke','#ccc');
-
-    // 4. Force simulation:
-    const simulation = d3.forceSimulation(nodes)
-        .force('link', d3.forceLink(links).id(d=>d.id).distance(120))
-        .force('charge', d3.forceManyBody().strength(-200))
-        .force('center', d3.forceCenter(width/2, (height-zoneHeight)/2))
-        .on('tick', ticked);
-
-    // 5. Draw links, nodes, labels:
-    const link = svg.append('g').selectAll('line')
-        .data(links).enter().append('line')
-            .attr('stroke','#999');
-
-    const node = svg.append('g').selectAll('circle')
-        .data(nodes).enter().append('circle')
-            .attr('r',12).attr('fill','steelblue')
-            .call(d3.drag()
-            .on('start', dragstarted)
-            .on('drag', dragged)
-            .on('end', dragended)
-            );
-
-    const label = svg.append('g').selectAll('text')
-        .data(nodes).enter().append('text')
-            .text(d=>d.id).attr('text-anchor','middle').attr('dy',4);
-
-    function ticked() {
-        link.attr('x1',d=>d.source.x).attr('y1',d=>d.source.y)
-            .attr('x2',d=>d.target.x).attr('y2',d=>d.target.y);
-        node.attr('cx',d=>d.x).attr('cy',d=>d.y);
-        label.attr('x',d=>d.x).attr('y',d=>d.y);
+    if (dest) {
+      // remove from origin
+      schedule[dragging.semIdx][dragging.slotIdx] = null;
+      // swap if needed
+      const existing = schedule[dest.semIdx][dest.slotIdx];
+      if (existing) {
+        schedule[dragging.semIdx][dragging.slotIdx] = existing;
+      }
+      schedule[dest.semIdx][dest.slotIdx] = dragging.data;
     }
 
-    // 6. Drag behavior + drop‑zone detection:
-    function dragstarted(event,d) {
-        if (!event.active) simulation.alphaTarget(0.3).restart();
-        d.fx = d.x; d.fy = d.y;
-    }
-    function dragged(event,d) {
-        d.fx = event.x; d.fy = event.y;
-    }
-    function dragended(event,d) {
-        if (!event.active) simulation.alphaTarget(0);
-        const dropped = zones.find(z =>
-        d.x>=z.x && d.x<=z.x+z.w && d.y>=z.y && d.y<=z.y+z.h
-        );
-        if (dropped) {
-        d.semester = dropped.semester;
-        d.fx = dropped.x + dropped.w/2;
-        d.fy = dropped.y + dropped.h/2;
-        // TODO: POST /update‑semester with d.id, d.semester
-        } else {
-        d.semester = null; d.fx = null; d.fy = null;
-        }
-    }
-    </script>
+    updateUI();
+    dragging = null;
+  }
+  // 5) Initial render
+  document.addEventListener('DOMContentLoaded', updateUI);
+</script>
 
-
-        {{!-- SORTABLE JS --}}
-        <script>
-        document.addEventListener('DOMContentLoaded', () => {
-        // find all the semester containers
-        document.querySelectorAll('.classes-container').forEach(container => {
-            new Sortable(container, {
-            group: 'courses',           // allows dragging between all semester lists
-            animation: 150,             // smooth animation
-            ghostClass: 'drag-ghost',   // CSS class for the placeholder
-            onEnd: evt => {
-                // evt.item   = the dragged DOM element
-                // evt.from   = original container
-                // evt.to     = destination container
-                // evt.oldIndex, evt.newIndex = positions
-
-                const courseId = evt.item.dataset.courseId;
-                const newSemesterEl = evt.to.closest('.semester');
-                const semesterName = newSemesterEl.querySelector('h3').textContent;
-
-                console.log(`Course ${courseId} moved to ${semesterName} at slot ${evt.newIndex}`);
-
-                // TODO: send this update to your back end:
-                // axios.post('/api/assign-course', { courseId, semester: semesterName, position: evt.newIndex });
-            }
-            });
-        });
-        });
-        </script>
 
 </body>
 </html>
