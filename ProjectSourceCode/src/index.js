@@ -27,6 +27,8 @@ app.engine('hbs', hbs.engine);
 app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, 'views'));
 
+
+
 // Middleware for parsing JSON and URL-encoded data
 app.use(bodyParser.json());
 app.use(
@@ -193,25 +195,44 @@ const auth = (req, res, next) => {
 // Authentication Required
 app.use(auth);
 
+//----------Add class to student classes----------
+app.post('/addStudentClass', async (req, res) => {
+  const {course_id} = req.body;
+  const identikey = req.session.user.identikey;
+  const chosenClassFromDb = await db.oneOrNone(`SELECT * FROM courses WHERE course_id = '${course_id}'`);
+  console.log("Chosen Class:");
+  console.log(chosenClassFromDb);
+  const course_id_from_db = chosenClassFromDb.course_id;
+  const course_term_from_db = chosenClassFromDb.term;
+
+  await db.none(`INSERT INTO student_courses (identikey, course_id, term) VALUES ('${identikey}', '${course_id_from_db}', '${course_term_from_db}')`)
+  .then(() => {
+    res.redirect('/schedule');
+
+   });
+
+})
 
 
 //----------Class Search Route ---------
 app.post('/getClasses', async (req, res) =>  {
   try {
-    const {keyword} = req.body;
-    console.log(req.body)
+    const {keyword, currentButtonId, student_courses} = req.body;
+    console.log(req.body);
+    let term = currentButtonId;
+    console.log((student_courses));
     // if(!keyword) {
     //   return res.status(400).json({ message: 'No keyword provided' });
     // }
     // Get courses from database
-    await db.any(`SELECT * FROM courses WHERE course_id ILIKE '%${keyword}%'`)
+    await db.any(`SELECT * FROM courses WHERE (term = '${term}') AND ((course_id ILIKE '%${keyword}%') OR (course_name ILIKE '%${keyword}%')) `)
     .then((courses) => {
       res.render('pages/schedule', {
         courses: courses,
         user: req.session.user,
         keyword: keyword,
-        // change body style so the search modal is still open
-
+        currentButtonId: term,
+        student_courses: (student_courses)
       })
 
 
@@ -234,7 +255,17 @@ app.get('/logout', (req, res) => {
 
 //-----------Login Route--------------
 app.get('/schedule', (req, res) => {
-  res.render('pages/schedule')
+  //fetch student schedule from db
+  const identikey = req.session.user.identikey;
+  db.any(`SELECT * FROM courses JOIN student_courses ON courses.course_id = student_courses.course_id WHERE identikey = '${identikey}'`)
+  .then((student_courses) => {
+    console.log(student_courses);
+    // Render the schedule page with student data
+    res.render('pages/schedule', {
+      user: req.session.user,
+      student_courses: JSON.stringify(student_courses),
+    });
+  })
 });
 
 //-----------Advisor Register After Route--------------

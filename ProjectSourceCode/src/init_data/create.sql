@@ -21,6 +21,8 @@ CREATE TABLE advisors (
   student_ids VARCHAR(20)[]
 );
 
+--This is the code for student courses
+
 
 --This code will insert sample data into the tables `advisors`, `students_to_advisors`, `courses`, `student_courses`, and `prerequisites`. You can modify the values in the `INSERT INTO` statements to match your specific data.
 DROP TABLE IF EXISTS students_to_advisors;
@@ -34,8 +36,16 @@ CREATE TABLE courses (
   course_id VARCHAR(20) PRIMARY KEY,
   course_name VARCHAR(100) NOT NULL,
   credit_hours NUMERIC NOT NULL,
+  term VARCHAR(20) NOT NULL,
   prerequisites VARCHAR(50)[]
 
+);
+
+DROP TABLE IF EXISTS student_courses;
+CREATE TABLE student_courses (
+  identikey VARCHAR(20) NOT NULL,
+  course_id VARCHAR(20) NOT NULL,
+  term VARCHAR(20) NOT NULL
 );
 
 

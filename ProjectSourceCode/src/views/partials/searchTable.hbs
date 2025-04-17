@@ -4,6 +4,7 @@
                 <th scope="col">Course ID</th>
                 <th scope="col">Course Name</th>
                 <th scope="col">Credit Hours</th>
+                <th scope="col">Term</th>
                 <th scope="col"> Action </th>
               
             </tr>
@@ -14,8 +15,14 @@
                 <th scope="row">{{this.course_id}}</th>
                 <td>{{this.course_name}}</td>
                 <td>{{this.credit_hours}}</td>
-                <td><button type="submit" class="btn btn-success" onclick="addClassFromModal('{{this.course_id}}', '{{this.course_name}}', '{{this.credit_hours}}')">Add</button></td>
-            </tr>
+                <td>{{this.term}}</td>
+                <td>
+                    <form action='/addStudentClass' method="POST">
+                    <button type = 'submit' class="btn btn-success" onclick="closeSearchBar();">Add</button>
+                    <input type="hidden" name="course_id" value="{{this.course_id}}">
+
+                </td>       
+                </form>  </tr>
             {{/each}}
         </tbody>
     </table>
