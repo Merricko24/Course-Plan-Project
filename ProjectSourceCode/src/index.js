@@ -7,6 +7,7 @@ const pgp = require('pg-promise')();
 const bodyParser = require('body-parser');
 const session = require('express-session');
  const bcrypt = require('bcryptjs'); // Added bcrypt for password hashing
+const { error } = require('console');
 app.use(express.static(__dirname + ''));
 
 app.use('/resources', express.static(path.join(__dirname, 'resources')));
@@ -48,8 +49,8 @@ app.use(
 
 // -------------------------------------  DB CONFIG AND CONNECT   ---------------------------------------
 const dbConfig = {
-  host: 'db',
-  port: 5432,
+  host: process.env.POSTGRES_HOST,
+  port: process.env.POSTGRES_PORT,
   database: process.env.POSTGRES_DB,
   user: process.env.POSTGRES_USER,
   password: process.env.POSTGRES_PASSWORD,
@@ -90,12 +91,12 @@ app.post('/register', async (req, res) => {
   try {
     const { first_name, last_name, identikey, password, isAdvisor} = req.body;
     if (!first_name || !last_name || !password || !identikey) {
-      return res.status(400).json({ message: 'All fields are required' });
+      return res.status(400).render('pages/register', {message: 'All fields are required' , error: true });
     }
     // Validate identikey format: 4 letters followed by 4 digits
     const identikeyRegex = /^[a-zA-Z]{4}\d{4}$/;
     if (!identikeyRegex.test(identikey)) {
-      return res.status(400).json({ message: 'Invalid identikey format' });
+      return res.status(400).render('pages/register', { message: 'Invalid identikey format', error: true });
     }
   
     const studentOrAdvisor = isAdvisor == 'on' ? 'advisors' : 'students';
@@ -103,7 +104,7 @@ app.post('/register', async (req, res) => {
     await db.oneOrNone(`SELECT * FROM ${studentOrAdvisor} WHERE identikey = '${identikey}'`)
     .then(async (existingUser) => {
       if (existingUser) {
-        return res.status(400).json({ message: 'User already exists' });
+        return res.status(400).render('pages/register', { message: 'User already exists', error: true });
       }
 
 
@@ -115,7 +116,7 @@ app.post('/register', async (req, res) => {
        .then(() => {
 
           // Registration successful
-          res.status(201).json({ message: 'User registered successfully' });
+          res.redirect('/login');
         })
         .finally(() => {
           res.render('pages/schedule')
@@ -137,14 +138,15 @@ app.post('/login', async (req, res) =>  {
   const {identikey, password} = req.body;
 try {
     if(!identikey || !password) {
-      return res.status(400).json({ message: 'All fields are required' });
+      return res.status(400).render('pages/login', {message: 'All fields are required', error: true });
     }
     //check if advisor or student
     const advisor = await db.oneOrNone(`SELECT identikey FROM advisors WHERE identikey = '${identikey}'`)
     const student = await db.oneOrNone(`SELECT identikey FROM students WHERE identikey = '${identikey}'`)
     
     if(!advisor && !student) {
-      return res.status(400).json({ message: 'User does not exist' });
+      return res.status(400).render('pages/login', {message: 'User does not exist', error: true });
+      
     }
     let a_or_s = null;
     if(advisor) {
