@@ -211,9 +211,9 @@ app.get('/logout', (req, res) => {
 ////RUN docker and TEST NEW SCHEDULE THING/////////
 
 
-const express = require('express');
+
 const router = express.Router();
-const pool = require('../inde');
+// const pool = require('../index');
 
 app.get('/schedule', async (req, res) => {
 
