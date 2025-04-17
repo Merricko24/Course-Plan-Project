@@ -26,3 +26,17 @@
             {{/each}}
         </tbody>
     </table>
+
+    {{#if recommended}}
+        <h4 class="mt-4">Recommended Classes</h4>
+            <ul class="list-group">
+                {{#each recommended}}
+                <li class="list-group-item">
+                    <strong>{{this.course_id}}</strong> &mdash; {{this.course_name}}
+                    ({{this.credit_hours}} credits)
+                </li>
+                {{/each}}
+            </ul>
+            {{else}}
+        <p class="text-muted mt-4">No recommendations at this time.</p>
+    {{/if}}

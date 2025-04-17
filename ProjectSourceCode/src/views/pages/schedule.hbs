@@ -58,6 +58,10 @@
           <button onclick="openSearchBar(this)" id = 'su25' class="btn custom-btn w-100">Add Class</button>
         </div>
       </div>
+      <!-- Add semester button -->
+      <div class="add-semester">
+        <button onclick="addSemester()" class="btn custom-btn w-100">Add Semester</button>
+      </div>
     </div>
   </div>
 
@@ -214,6 +218,25 @@
       newTerm += ' 20' + year;
       return newTerm;
     }
+
+/*
+    function addSemester() {
+      const newSemester = document.createElement("div");
+      newSemester.className = "semester";
+      const semesterCount = document.querySelectorAll(".semester").length + 1;
+
+      newSemester.innerHTML =
+        <h3>Semester ${semesterCount}</h3>
+        <div class="classes-container"></div>
+        <button onclick="openSearchBar(this)" class="btn custom-btn w-100">Browse Courses</button>;
+
+      // Formats placement of new semester box 
+      const scrollContainer = document.querySelector(".scroll-container");
+      scrollContainer.appendChild(newSemester);
+      scrollContainer.scrollLeft = scrollContainer.scrollWidth;
+    }
+*/
+
   </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

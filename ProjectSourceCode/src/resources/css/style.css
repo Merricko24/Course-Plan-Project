@@ -261,11 +261,13 @@
     }
      .modal-content {
       background-color: #fff;
-      padding-top: 10%;
+      padding-top: 2%;
       width: 300px;
       border-radius: 8px;
       text-align: top;
       position: relative;
+      max-height: 80vh;
+      overflow-y: auto;
     } 
     .close-btn {
       position: absolute;
