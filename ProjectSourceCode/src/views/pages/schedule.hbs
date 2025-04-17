@@ -64,14 +64,23 @@
   {{> footer}}
 
   <!-- Modal -->
-  <div id="searchBarModal">
-    <div class="modal-content">
-      <span class="close-btn" onclick="closeSearchBar()">&times;</span>
-      <h3>Search Class</h3>
-      <input type="text" id="classNameInput" placeholder="Enter class name..." />
-      <button class="search-button" onclick="addClassFromModal()">Search</button>
+  <form action="/getClasses" method="POST">
+    <div id="searchBarModal">
+      <div class="modal-content"></div>
+        <span class="close-btn" onclick="closeSearchBar()">&times;</span>
+        <div class="form-group searchbar">
+          <label for="classNameInput" id = 'searchlabel'>Search Class</label>
+          <input type="text" id="classNameInput" name="keyword" class="form-control" placeholder="Enter class name..." required />
+        </div>
+        <button type="submit" class="search-button" >Search</button>
+          </form>
+          {{#if courses}}
+          {{> searchTable}}
+          {{/if}}
+ 
     </div>
-  </div>
+    </div>
+
 
   <!-- JavaScript -->
   <script>
@@ -97,8 +106,7 @@
     }
     
     // This function gets called when the Search button in the modal is clicked
-    function addClassFromModal() {
-      let className = document.getElementById('classNameInput').value.trim();
+    function addClassFromModal(className, classId, classCredits) {
       if (className === "") {
         alert("Please enter a class name");
         return;
