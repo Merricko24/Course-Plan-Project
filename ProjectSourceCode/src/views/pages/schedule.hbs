@@ -122,7 +122,7 @@
       }
     }
     
-    // This function gets called when the Search button in the modal is clicked
+    // This function gets called when the add button in the modal is clicked
     function addClassFromModal(className, classId, classCredits) {
       if (className === "") {
         alert("Please enter a class name");
@@ -136,10 +136,15 @@
       let classBlock = document.createElement("div");
       classBlock.className = "class-block";
       classBlock.textContent = className;
+
+        classBlock.dataset.courseId     = classId;
+        classBlock.dataset.creditHours  = creditHours;
+        classBlock.dataset.courseName   = className;
+
       
       // When clicking the class block, show an information bubble
       classBlock.onclick = function(event) {
-        showInfoBubble(event, className);
+        showInfoBubble(event, this.dataset.courseId, this.dataset.creditHours, this.dataset.courseName);
       }
       
       // Append the new class block into the container; the Add Class button stays at the bottom,
@@ -152,10 +157,10 @@
     }
     
     // This function creates an information bubble near the clicked class block.
-    function showInfoBubble(event, className) {
+    function showInfoBubble(event, classID, creditHours, className) {
       let bubble = document.createElement("div");
       bubble.className = "info-bubble";
-      bubble.textContent = "More info about " + className;
+      bubble.textContent = "More info about " + className + ":\n" + "Course ID: " + classID + "\nCredit Hours: " + creditHours;
       // Style the bubble
       bubble.style.position = "absolute";
       bubble.style.backgroundColor = "#fff";
