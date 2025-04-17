@@ -240,8 +240,16 @@ app.get('/schedule', (req, res) => {
 //-----------Advisor Register After Route--------------
 
 app.get('/scheduleAdvisor', (req, res) => {
-  res.render('pages/scheduleAdvisor')
+  const user = req.session.user;
+  if (!user || !user.isAdvisor) {
+    return res.redirect('/login');
+  }
+  res.render('pages/scheduleAdvisor', {
+    user: user
+  });
 });
+
+
 
 ////profile//////////
 // Authentication Required
