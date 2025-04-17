@@ -164,7 +164,7 @@ try {
 
     // Redirect to the appropriate page based on user type
     if (a_or_s === 'advisors') {
-      res.redirect('/scheduleAdvisor', {
+      res.render('pages/scheduleAdvisor', {
         user: req.session.user,
       });
     } else {
