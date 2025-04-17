@@ -575,6 +575,12 @@
       bubble.innerHTML = content;
       
       // Position the bubble relative to the clicked element
+      bubble.textContent = "More info about " + className + ":\n" + "Credit Hours:";
+      Object.assign(bubble.style, {
+        position: "absolute", backgroundColor: "#fff", border: "1px solid #ccc",
+        padding: "5px", borderRadius: "4px", boxShadow: "0px 2px 6px rgba(0,0,0,0.2)", zIndex: 1000
+      });
+
       let rect = event.target.getBoundingClientRect();
       bubble.style.top = (rect.top + window.scrollY) + "px";
       bubble.style.left = (rect.right + 10 + window.scrollX) + "px";

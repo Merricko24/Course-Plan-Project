@@ -253,20 +253,32 @@ app.get('/logout', (req, res) => {
   req.session.destroy();
 });
 
-//-----------Login Route--------------
-app.get('/schedule', (req, res) => {
-  //fetch student schedule from db
-  const identikey = req.session.user.identikey;
-  db.any(`SELECT * FROM courses JOIN student_courses ON courses.course_id = student_courses.course_id WHERE identikey = '${identikey}'`)
-  .then((student_courses) => {
-    console.log(student_courses);
-    // Render the schedule page with student data
-    res.render('pages/schedule', {
-      user: req.session.user,
-      student_courses: JSON.stringify(student_courses),
-    });
-  })
+//----------Schedule page Routes--------------
+// app.get('/schedule', (req, res) => {
+//   res.render('pages/schedule')
+// });
+
+
+////RUN docker and TEST NEW SCHEDULE THING/////////
+
+
+
+const router = express.Router();
+// const pool = require('../index');
+
+app.get('/schedule', async (req, res) => {
+
+  try {
+    const coursesResult = await db.query('SELECT * FROM courses;');
+    // Pass the courses data to the template as JSON data
+    res.render('pages/schedule', { courses: JSON.stringify(coursesResult.rows) });
+  } catch (err) {
+    console.error('Error retrieving courses for schedule:', err);
+    res.status(500).send('Server Error');
+  }
+
 });
+
 
 //-----------Advisor Register After Route--------------
 
