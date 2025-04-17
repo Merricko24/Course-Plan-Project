@@ -269,6 +269,7 @@ app.get('/schedule', (req, res) => {
 });
 
 //-----------Advisor Register After Route--------------
+
 app.get('/scheduleAdvisor', (req, res) => {
   res.render('pages/scheduleAdvisor')
 });
