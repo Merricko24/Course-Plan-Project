@@ -130,6 +130,7 @@ app.get('/login', (req, res) => {
   res.render('pages/login')
 });
 
+
 app.post('/login', async (req, res) =>  {
   const {identikey, password} = req.body;
 try {
@@ -163,7 +164,7 @@ try {
 
     // Redirect to the appropriate page based on user type
     if (a_or_s === 'advisors') {
-      res.redirect('/scheduleAdvisor', {
+      res.render('pages/scheduleAdvisor', {
         user: req.session.user,
       });
     } else {
@@ -193,6 +194,35 @@ const auth = (req, res, next) => {
 app.use(auth);
 
 
+
+//----------Class Search Route ---------
+app.post('/getClasses', async (req, res) =>  {
+  try {
+    const {keyword} = req.body;
+    console.log(req.body)
+    // if(!keyword) {
+    //   return res.status(400).json({ message: 'No keyword provided' });
+    // }
+    // Get courses from database
+    await db.any(`SELECT * FROM courses WHERE course_id ILIKE '%${keyword}%'`)
+    .then((courses) => {
+      res.render('pages/schedule', {
+        courses: courses,
+        user: req.session.user,
+        keyword: keyword,
+        // change body style so the search modal is still open
+
+      })
+
+
+     });
+
+
+  }
+  catch (error) {
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+});
 
 
 
