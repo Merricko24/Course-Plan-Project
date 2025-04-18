@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -31,42 +30,42 @@
         <!-- Each semester now has a container for class blocks and its Add Class button -->
         <div class="semester">
           <h3>Semester 1</h3>
-          <div id = "sem0"class="classes-container"></div>
+          <div id="sem0" class="classes-container"></div>
           <button onclick="openSearchBar(this)" class="btn custom-btn w-100">Add Class</button>
         </div>
         <div class="semester">
           <h3>Semester 2</h3>
-          <div id = "sem1" class="classes-container"></div>
+          <div id="sem1" class="classes-container"></div>
           <button onclick="openSearchBar(this)" class="btn custom-btn w-100">Add Class</button>
         </div>
         <div class="semester">
           <h3>Semester 3</h3>
-          <div id = "sem2" class="classes-container"></div>
+          <div id="sem2" class="classes-container"></div>
           <button onclick="openSearchBar(this)" class="btn custom-btn w-100">Add Class</button>
         </div>
         <div class="semester">
           <h3>Semester 4</h3>
-          <div id = "sem3" class="classes-container"></div>
+          <div id="sem3" class="classes-container"></div>
           <button onclick="openSearchBar(this)" class="btn custom-btn w-100">Add Class</button>
         </div>
         <div class="semester">
           <h3>Semester 5</h3>
-          <div id = "sem4" class="classes-container"></div>
+          <div id="sem4" class="classes-container"></div>
           <button onclick="openSearchBar(this)" class="btn custom-btn w-100">Add Class</button>
         </div>
         <div class="semester">
           <h3>Semester 6</h3>
-          <div id = "sem5" class="classes-container"></div>
+          <div id="sem5" class="classes-container"></div>
           <button onclick="openSearchBar(this)" class="btn custom-btn w-100">Add Class</button>
         </div>
         <div class="semester">
           <h3>Semester 7</h3>
-          <div id = "sem6" class="classes-container"></div>
+          <div id="sem6" class="classes-container"></div>
           <button onclick="openSearchBar(this)" class="btn custom-btn w-100">Add Class</button>
         </div>
         <div class="semester">
           <h3>Semester 8</h3>
-          <div id = "sem7" class="classes-container"></div>
+          <div id="sem7" class="classes-container"></div>
           <button onclick="openSearchBar(this)" class="btn custom-btn w-100">Add Class</button>
         </div>
       </div>
@@ -83,20 +82,21 @@
 
   <!-- Modal -->
   <form action="/getClasses" method="POST">
-  {{#if keyword}}
+    {{#if keyword}}
     <div id="searchBarModal" style="display: block">
-  {{else }}
-    <div id="searchBarModal" style="display: none;">
-  {{/if}}
+      {{else}}
+      <div id="searchBarModal" style="display: none;">
+        {{/if}}
 
-      <div class="modal-content"></div>
+        <div class="modal-content"></div>
         <span class="close-btn" onclick="closeSearchBar()">&times;</span>
         <div class="form-group searchbar">
-          <label for="classNameInput" id = 'searchlabel'>Search Class</label>
-          <input type="text" id="classNameInput" name="keyword" class="form-control" placeholder="Enter class name..."/>
-          <input type="hidden" name="currentButtonId" value='{{currentButtonId}}'/>
-          <input type="hidden" name="student_courses" value='{{{student_courses}}}'/>
-          
+          <label for="classNameInput" id='searchlabel'>Search Class</label>
+          <input type="text" id="classNameInput" name="keyword" class="form-control"
+            placeholder="Enter class name..." />
+          <input type="hidden" name="currentButtonId" value='{{currentButtonId}}' />
+          <input type="hidden" name="student_courses" value='{{{student_courses}}}' />
+
         </div>
         <button type="submit" class="btn custom-btn w-100">Search</button>
       </div>
@@ -136,9 +136,9 @@
 
   <!-- JavaScript -->
   <script>
-       // Global variable to keep track of the Add Class button that invoked the modal
+    // Global variable to keep track of the Add Class button that invoked the modal
     {{#if student_courses}}
-    let student_courses = {{{student_courses}}}
+    let student_courses = {{{ student_courses }}}
     {{/if}}
     {{#if currentButtonId}}
     let currentButtonId = document.getElementById('{{{currentButtonId}}}').id;
@@ -147,7 +147,7 @@
     {{/if}}
     console.log("Current button:", currentButtonId);
     console.log("Courses:", student_courses);
-    
+
     // When an Add Class button is clicked, open the modal and save a reference to the button
     function openSearchBar(button) {
       currentButton = button;
@@ -168,9 +168,81 @@
         closeSearchBar();
       }
     }
-    
 
+    //function to disable add buttom of courses added ----------- check
+    function disableAdded(button, courseId, courseName, creditHours) {
+      button.disabled = true;
+      button.textContent = 'Added';
+  
+      addClassFromModal(courseId, courseName, creditHours);
+  
+      fetch('/addStudentClass', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          course_id: courseId
+        }),
+      })
+      .then(response => {
+        if (!response.ok) {
+          //re-enables button if error
+          button.disabled = false;
+          button.textContent = 'Add';
+          alert('Failed to add class. Please try again.');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        button.disabled = false;
+        button.textContent = 'Add';
+      });
+    }
+
+    //function to add new semesters
+    function addSemester() {
+      try {
+        const semesterCount = document.querySelectorAll(".semester").length;
+        const newSemester = document.createElement("div");
+        newSemester.className = "semester";
     
+        newSemester.innerHTML = `
+          <h3>Semester ${semesterCount + 1}</h3>
+          <div id="sem${semesterCount}" class="classes-container"></div>
+          <button onclick="openSearchBar(this)" class="btn custom-btn w-100">Add Class</button>
+        `;
+    
+        //adds and formats new semester box
+        const scrollContainer = document.querySelector(".scroll-container");
+        if (!scrollContainer) {
+          console.error("Scroll container not found");
+          return;
+        }
+    
+        scrollContainer.appendChild(newSemester);
+        scrollContainer.scrollLeft = scrollContainer.scrollWidth;
+    
+        if (typeof schedule === 'undefined') {
+          console.error("Schedule variable is not defined");
+          return;
+        }
+    
+        schedule.push(Array(6).fill(null));
+    
+        //updates UI
+        if (typeof updateUI === 'function') {
+          updateUI();
+        } else {
+          console.error("updateUI function failed");
+        }
+    
+        console.log("New semester added");
+      } catch (error) {
+        console.error("Error adding new semester:", error);
+      }
+    }
+
     // This function creates an information bubble near the clicked class block.
     function showInfoBubble(event, className) {
       let bubble = document.createElement("div");
@@ -212,7 +284,7 @@
       let newTerm = "";
       let season = term.substring(0, 2)
       let year = term.substring(2, 4)
-      switch(season) {
+      switch (season) {
         case 'fa':
           newTerm += 'Fall';
           break;
@@ -229,33 +301,33 @@
   </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-        {{!-- ----------------D3 library Script----------------------- --}}
-        <script src="https://d3js.org/d3.v6.min.js"></script>
-    <script>
-  // 1) Our in-memory schedule: 8 semesters × 6 slots each
-  const schedule = Array.from({length: 8}, _ => Array(6).fill(null));
+  {{!-- ----------------D3 library Script----------------------- --}}
+  <script src="https://d3js.org/d3.v6.min.js"></script>
+  <script>
+    // 1) Our in-memory schedule: 8 semesters × 6 slots each
+    const schedule = Array.from({ length: 8 }, _ => Array(6).fill(null));
 
-  // 2) Helper to redraw all semesters
-  function updateUI() {
-    schedule.forEach((slots, semIdx) => {
-      // select the container by its id (sem0, sem1, …)
-      const container = d3.select(`#sem${semIdx}`);
-      
-      // Bind slot data
-      const slotSel = container.selectAll('.slot')
-        .data(slots, (_, i) => i);
+    // 2) Helper to redraw all semesters
+    function updateUI() {
+      schedule.forEach((slots, semIdx) => {
+        // select the container by its id (sem0, sem1, …)
+        const container = d3.select(`#sem${semIdx}`);
 
-      // ENTER empty slots
-      slotSel.enter()
-        .append('div')
+        // Bind slot data
+        const slotSel = container.selectAll('.slot')
+          .data(slots, (_, i) => i);
+
+        // ENTER empty slots
+        slotSel.enter()
+          .append('div')
           .classed('slot', true)
-        .merge(slotSel)
-        .each(function(data, slotIdx) {
-          d3.select(this).selectAll('div.class-block').remove();
-          if (data) {
-            // If there's a class in this slot, render it
-            d3.select(this)
-              .append('div')
+          .merge(slotSel)
+          .each(function (data, slotIdx) {
+            d3.select(this).selectAll('div.class-block').remove();
+            if (data) {
+              // If there's a class in this slot, render it
+              d3.select(this)
+                .append('div')
                 .classed('class-block', true)
                 .text(data.name)
                 .attr('data-course-id', data.id)
@@ -264,97 +336,97 @@
                   .on('drag', dragged)
                   .on('end', dragended)
                 );
-          }
-        });
+            }
+          });
 
-      // EXIT any extra slots (shouldn't happen, but safe)
-      slotSel.exit().remove();
-    });
-  }
-
-  // 3) Add a new class into the first available slot in the clicked semester
-  function addClassFromModal(id, name, credits) {
-    // find which sem button opened the modal
-    const semIdx = +currentButton.parentNode.id.replace('sem',''); 
-    const slots = schedule[semIdx];
-    const empty = slots.indexOf(null);
-    if (empty === -1) return alert('No room in that semester');
-    slots[empty] = {id, name, credits};
-    updateUI();
-    closeSearchBar();
-  }
-
-  // 4) D3 drag handlers
-  let dragging = null;
-
-  function dragstarted(event, d) {
-    const node = this;
-    const rect = node.getBoundingClientRect();
-
-    // record where inside the box we clicked
-    d._offsetX = event.x - rect.left;
-    d._offsetY = event.y - rect.top;
-
-    dragging = {
-      data: d,
-      semIdx: +node.parentNode.parentNode.id.replace('sem',''),
-      slotIdx: Array.from(node.parentNode.parentNode.children)
-                     .indexOf(node.parentNode)
-    };
-
-    d3.select(node)
-      .classed('dragging', true)
-      .style('width',  rect.width  + 'px')
-      .style('height', rect.height + 'px');
-  }
-
-  function dragged(event, d) {
-    // move using the original click offset
-    d3.select(this)
-      .style('left', (event.x - d._offsetX) + 'px')
-      .style('top',  (event.y - d._offsetY) + 'px');
-  }
-
-  function dragended(event, d) {
-    const node = this;
-    // remove dragging styles
-    d3.select(node)
-      .classed('dragging', false)
-      .style('width', null)
-      .style('height', null)
-      .style('left', null)
-      .style('top', null);
-
-    // find drop target
-    const [x,y] = [event.sourceEvent.clientX, event.sourceEvent.clientY];
-    let dest = null;
-    schedule.forEach((slots, semIdx) => {
-      const cont = document.getElementById(`sem${semIdx}`);
-      cont.querySelectorAll('.slot').forEach((slotEl, slotIdx) => {
-        const r = slotEl.getBoundingClientRect();
-        if (x >= r.left && x <= r.right && y >= r.top && y <= r.bottom) {
-          dest = {semIdx, slotIdx};
-        }
+        // EXIT any extra slots (shouldn't happen, but safe)
+        slotSel.exit().remove();
       });
-    });
-
-    if (dest) {
-      // remove from origin
-      schedule[dragging.semIdx][dragging.slotIdx] = null;
-      // swap if needed
-      const existing = schedule[dest.semIdx][dest.slotIdx];
-      if (existing) {
-        schedule[dragging.semIdx][dragging.slotIdx] = existing;
-      }
-      schedule[dest.semIdx][dest.slotIdx] = dragging.data;
     }
 
-    updateUI();
-    dragging = null;
-  }
-  // 5) Initial render
-  document.addEventListener('DOMContentLoaded', updateUI);
-</script>
+    // 3) Add a new class into the first available slot in the clicked semester
+    function addClassFromModal(id, name, credits) {
+      // find which sem button opened the modal
+      const semIdx = +currentButton.parentNode.id.replace('sem', '');
+      const slots = schedule[semIdx];
+      const empty = slots.indexOf(null);
+      if (empty === -1) return alert('No room in that semester');
+      slots[empty] = { id, name, credits };
+      updateUI();
+      closeSearchBar();
+    }
+
+    // 4) D3 drag handlers
+    let dragging = null;
+
+    function dragstarted(event, d) {
+      const node = this;
+      const rect = node.getBoundingClientRect();
+
+      // record where inside the box we clicked
+      d._offsetX = event.x - rect.left;
+      d._offsetY = event.y - rect.top;
+
+      dragging = {
+        data: d,
+        semIdx: +node.parentNode.parentNode.id.replace('sem', ''),
+        slotIdx: Array.from(node.parentNode.parentNode.children)
+          .indexOf(node.parentNode)
+      };
+
+      d3.select(node)
+        .classed('dragging', true)
+        .style('width', rect.width + 'px')
+        .style('height', rect.height + 'px');
+    }
+
+    function dragged(event, d) {
+      // move using the original click offset
+      d3.select(this)
+        .style('left', (event.x - d._offsetX) + 'px')
+        .style('top', (event.y - d._offsetY) + 'px');
+    }
+
+    function dragended(event, d) {
+      const node = this;
+      // remove dragging styles
+      d3.select(node)
+        .classed('dragging', false)
+        .style('width', null)
+        .style('height', null)
+        .style('left', null)
+        .style('top', null);
+
+      // find drop target
+      const [x, y] = [event.sourceEvent.clientX, event.sourceEvent.clientY];
+      let dest = null;
+      schedule.forEach((slots, semIdx) => {
+        const cont = document.getElementById(`sem${semIdx}`);
+        cont.querySelectorAll('.slot').forEach((slotEl, slotIdx) => {
+          const r = slotEl.getBoundingClientRect();
+          if (x >= r.left && x <= r.right && y >= r.top && y <= r.bottom) {
+            dest = { semIdx, slotIdx };
+          }
+        });
+      });
+
+      if (dest) {
+        // remove from origin
+        schedule[dragging.semIdx][dragging.slotIdx] = null;
+        // swap if needed
+        const existing = schedule[dest.semIdx][dest.slotIdx];
+        if (existing) {
+          schedule[dragging.semIdx][dragging.slotIdx] = existing;
+        }
+        schedule[dest.semIdx][dest.slotIdx] = dragging.data;
+      }
+
+      updateUI();
+      dragging = null;
+    }
+    // 5) Initial render
+    document.addEventListener('DOMContentLoaded', updateUI);
+  </script>
 
 
 </body>
