@@ -121,7 +121,7 @@
     function showInfoBubble(event, className) {
       let bubble = document.createElement("div");
       bubble.className = "info-bubble";
-      bubble.textContent = "More info about " + className;
+      bubble.textContent = `Course ID: ${classID}\nName: ${className}`;
       // Style the bubble
       bubble.style.position = "absolute";
       bubble.style.backgroundColor = "#fff";
@@ -179,8 +179,14 @@
             d3.select(this)
               .append('div')
                 .classed('class-block', true)
-                .text(data.name)
+                .text(data.id)
                 .attr('data-course-id', data.id)
+                
+                .on('contextmenu', (event, d) => {
+                event.preventDefault();  // stop the native menu
+                // show your bubble with whatever data you need:
+                showInfoBubble(event, d.id, d.credits, d.name);
+                })
                 .call(d3.drag()
                   .on('start', dragstarted)
                   .on('drag', dragged)
