@@ -186,15 +186,19 @@
 
     /* Sidebar for current semester classes */
     .sidebar {
-      width: 300px;
-      background-color: #ccc;
+      width: 250px;
+      background-color: #000000;
+      color: white;
       padding: 20px;
       overflow-y: auto;
     }
+
     .sidebar h2 {
       text-align: center;
-      margin-top: 0;
+      color: white;
+      margin-bottom: 15px;
     }
+
     .classes-list {
       list-style: none;
       padding: 0;
