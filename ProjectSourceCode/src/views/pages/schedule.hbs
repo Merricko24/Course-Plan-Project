@@ -94,14 +94,22 @@
           <label for="classNameInput" id='searchlabel'>Search Class</label>
           <input type="text" id="classNameInput" name="keyword" class="form-control"
             placeholder="Enter class name..." />
-          <input type="hidden" name="currentButtonId" value='{{currentButtonId}}' />
+          <input type="hidden" name = 'currentButtonId' id = 'currentButtonId',>
+          <input type="hidden" name="semesterToQuery" id = 'semesterToQuery'/>
           <input type="hidden" name="student_courses" value='{{{student_courses}}}' />
 
         </div>
         <button type="submit" class="btn custom-btn w-100">Search</button>
+        </form>
+      {{#if courses}}
+      {{> searchTable}}
+      {{/if}}
+ 
+        
       </div>
 
-      {{#if courses}}
+
+      {{!-- {{#if courses}}
       <div style="margin-top: 20px;">
         <!-- display courses in modal -->
         <table class="table">
@@ -130,30 +138,44 @@
           </tbody>
         </table>
       </div>
-      {{/if}}
+      {{/if}} --}}
     </div>
-  </form>
+ 
 
   <!-- JavaScript -->
   <script>
     // Global variable to keep track of the Add Class button that invoked the modal
+    
+    //CHECK if student courses on startup. if so, populate table with them!!!!!!!!!!!
+    //NOW!!!!!!!
+    //DO IT!
+    
     {{#if student_courses}}
+    console.log({{{student_courses}}})
     let student_courses = {{{ student_courses }}}
+ 
     {{/if}}
     {{#if currentButtonId}}
-    let currentButtonId = document.getElementById('{{{currentButtonId}}}').id;
+    console.log("BUTTON FOUND")
+    let currentButtonId = '{{currentButtonId}}'
+    document.getElementById('currentButtonId').value = currentButtonId
     {{else}}
     let currentButtonId = null;
     {{/if}}
-    console.log("Current button:", currentButtonId);
-    console.log("Courses:", student_courses);
+        {{#if semesterToQuery}}
+    document.getElementById('semesterToQuery').value = '{{semesterToQuery}}'
+    {{/if}}
 
     // When an Add Class button is clicked, open the modal and save a reference to the button
     function openSearchBar(button) {
       currentButton = button;
+      
       document.getElementById('searchBarModal').style.display = 'block';
-      document.querySelector('input[name="currentButtonId"]').value = currentButton.id;
-      console.log("Current button ID:", currentButton.id);
+      currentButtonId = currentButton.previousSibling.previousSibling.id;
+      document.getElementById('currentButtonId').value = currentButtonId
+      //second previous sibling has semester id. Weird but it works
+      document.getElementById('semesterToQuery').value = semesterToCalendarTerm(currentButtonId)
+ 
       
     }
 
@@ -169,35 +191,51 @@
       }
     }
 
-    //function to disable add buttom of courses added ----------- check
-    function disableAdded(button, courseId, courseName, creditHours) {
-      button.disabled = true;
-      button.textContent = 'Added';
-  
-      addClassFromModal(courseId, courseName, creditHours);
-  
-      fetch('/addStudentClass', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          course_id: courseId
-        }),
-      })
-      .then(response => {
-        if (!response.ok) {
-          //re-enables button if error
-          button.disabled = false;
-          button.textContent = 'Add';
-          alert('Failed to add class. Please try again.');
+
+
+    //semester to date
+
+    function semesterToCalendarTerm(selectedSemester) { 
+      //ex:  Start date fall 2025
+      //sem0: fa25
+      //sem1: sp26
+      //sem2: fa26
+
+      let term = parseInt(selectedSemester.replace('sem', ''));
+      let firstTerm = "{{user.start_term}}"
+
+
+      //25, 26, etc
+      let termYear = parseInt(firstTerm.replace('fa' || 'sp', ''));
+
+      //fa or sp
+      let termSemester = firstTerm.slice(0,2)
+
+
+      //Base case 0
+      if (term == 0) {
+        return firstTerm;
+      }
+
+      //nonzero int
+      else {
+        //no float just int wanted for yearsToAdd
+        yearsToAdd = parseInt(term / 2)
+        //if mod 2 = 0, just change year
+        if (term % 2 == 0) {
+          termYear += yearsToAdd
         }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        button.disabled = false;
-        button.textContent = 'Add';
-      });
+        else {
+          //odd term (1,3 ,5)
+          if(termSemester = 'fa') {
+            termSemester = 'sp'
+          }
+          termYear += yearsToAdd
+          termYear += 1
+        }
+
+      }
+      return (termSemester + termYear.toString())
     }
 
     //function to add new semesters
@@ -237,11 +275,26 @@
           console.error("updateUI function failed");
         }
     
-        console.log("New semester added");
       } catch (error) {
         console.error("Error adding new semester:", error);
       }
     }
+
+    //map semesters for addClassFromModal usage
+    //call this every time the page is reloaded to have an up to date map
+    let semesterMap = []
+    function mapSemestersToTerms() {
+      const semesterCount = document.querySelectorAll(".semester").length;
+      for(let i = 0; i != semesterCount; i++) {
+        semesterMap[i] = (semesterToCalendarTerm('sem' + i))
+      }
+
+    }
+
+    mapSemestersToTerms();
+    console.log('Semester mapping: ', semesterMap)
+
+
 
     // This function creates an information bubble near the clicked class block.
     function showInfoBubble(event, className) {
@@ -280,24 +333,8 @@
       }, 3000);
     }
 
-    function properTermName(term) {
-      let newTerm = "";
-      let season = term.substring(0, 2)
-      let year = term.substring(2, 4)
-      switch (season) {
-        case 'fa':
-          newTerm += 'Fall';
-          break;
-        case 'sp':
-          newTerm += 'Spring';
-          break;
-        case 'su':
-          newTerm += 'Summer';
-          break;
-      }
-      newTerm += ' 20' + year;
-      return newTerm;
-    }
+
+
   </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -345,16 +382,32 @@
     }
 
     // 3) Add a new class into the first available slot in the clicked semester
-    function addClassFromModal(id, name, credits) {
+    //pass inputted class object
+    function addClassFromModal(inputted_class) {
       // find which sem button opened the modal
-      const semIdx = +currentButton.parentNode.id.replace('sem', '');
-      const slots = schedule[semIdx];
+      let term = inputted_class.term;
+      let termId = 0;
+      let id = inputted_class.course_id;
+      let name = inputted_class.course_name;
+      let credit_hours = inputted_class.credit_hours;
+      console.log("ID: ", id)
+      console.log("NAME: ", name)
+      console.log("CREDIT HOURS:" , credit_hours)
+      for (let i = 0; i < semesterMap.length; i++) {
+        if(semesterMap[i] == term) {
+          termId = i;
+        }
+      }
+      console.log("TERM ID:" ,termId)
+      const slots = schedule[termId];
       const empty = slots.indexOf(null);
       if (empty === -1) return alert('No room in that semester');
-      slots[empty] = { id, name, credits };
+      slots[empty] = { id, name, credit_hours };
       updateUI();
-      closeSearchBar();
     }
+      student_courses.forEach(course => {
+    addClassFromModal(course)
+   })
 
     // 4) D3 drag handlers
     let dragging = null;

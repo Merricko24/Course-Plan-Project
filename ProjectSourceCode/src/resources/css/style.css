@@ -112,6 +112,15 @@
   margin: 20px 0;
 }
 
+/* table wrapper (for scrolling searched classes) */
+.table-scroll-wrap{
+  display: inline-block;
+  max-height: 400px;
+  margin-top: 20px;
+  width: 100%;
+  overflow: auto;
+}
+
 /* Submit Button */
 .next-btn {
   background-color: #e0e0e0;
