@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,38 +8,99 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="../../resources/css/style.css" />
   <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    
+    .main-container {
+      display: flex;
+      height: 100vh;
+    }
+    
+    .sidebar {
+      width: 250px;
+      background-color: #000000;
+      color: white;
+      padding: 20px;
+      overflow-y: auto;
+    }
+    
+    .sidebar h2 {
+      color: white;
+      margin-bottom: 15px;
+    }
+    
     .classes-list {
       list-style-type: none;
       padding: 0;
     }
-
+    
     .classes-list li {
       padding: 8px 0;
       border-bottom: 1px solid #3c546c;
       cursor: pointer;
     }
-
+    
     .classes-list li:hover {
       background-color: #ccb478;
     }
-
+    
     .content {
       flex-grow: 1;
       padding: 20px;
       overflow-y: auto;
     }
-
+    
+    .scroll-container {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    
+    .semester {
+      background-color: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .semester h3 {
+      color: #2c3e50;
+      margin-bottom: 15px;
+      border-bottom: 2px solid #ecf0f1;
+      padding-bottom: 10px;
+    }
+    
+    .classes-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+    
+    .class-block {
+      background-color: #3498db;
+      color: white;
+      padding: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      min-width: 150px;
+      text-align: center;
+    }
+    
     .custom-btn {
       background-color: #2c3e50;
       color: white;
       transition: background-color 0.3s;
     }
-
+    
     .custom-btn:hover {
       background-color: #1e2b38;
       color: white;
     }
-
+    
     #searchBarModal {
       display: none;
       position: fixed;
@@ -49,9 +109,9 @@
       top: 0;
       width: 100%;
       height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
+      background-color: rgba(0,0,0,0.5);
     }
-
+    
     .modal-content {
       position: relative;
       background-color: #fff;
@@ -59,9 +119,9 @@
       padding: 20px;
       width: 60%;
       border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     }
-
+    
     .close-btn {
       position: absolute;
       top: 10px;
@@ -69,11 +129,11 @@
       font-size: 24px;
       cursor: pointer;
     }
-
+    
     .searchbar {
       margin: 20px 0;
     }
-
+    
     .search-button {
       background-color: #ccb478;
       color: white;
@@ -82,17 +142,17 @@
       border-radius: 4px;
       cursor: pointer;
     }
-
+    
     .info-bubble {
       position: absolute;
       background-color: #fff;
       border: 1px solid #ccc;
       padding: 10px;
       border-radius: 4px;
-      box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.2);
+      box-shadow: 0px 2px 6px rgba(0,0,0,0.2);
       z-index: 1000;
     }
-
+    
     /* Advisor-specific styles that match the theme */
     .student-select {
       margin-bottom: 20px;
@@ -100,7 +160,7 @@
       background-color: #ccb478;
       border-radius: 5px;
     }
-
+    
     .student-select select {
       width: 100%;
       padding: 8px;
@@ -110,7 +170,7 @@
       color: #000000;
       margin-top: 5px;
     }
-
+    
     .student-info {
       background-color: #ccb478;
       color: white;
@@ -118,11 +178,11 @@
       border-radius: 5px;
       margin-bottom: 20px;
     }
-
+    
     .notes-section {
       margin-top: 20px;
     }
-
+    
     .notes-section textarea {
       width: 100%;
       height: 100px;
@@ -133,7 +193,6 @@
     }
   </style>
 </head>
-
 <body>
 
 
@@ -143,7 +202,7 @@
     <div class="sidebar">
       <h2>Advisor Dashboard</h2>
       <p>Welcome, <span id="first_name">{{advisors.first_name}} {{advisors.last_name}}</span></p>
-
+      
       <div class="student-select">
         <h5>Select Student</h5>
         <select id="student-dropdown" onchange="loadStudentSchedule()">
@@ -154,7 +213,7 @@
           <option value="mann2000">Man Name</option>
         </select>
       </div>
-
+      
       <div class="student-info" id="student-info-panel" style="display: none;">
         <h5>Student Information</h5>
         <p>Name: <span id="student-name"></span></p>
@@ -162,13 +221,13 @@
         <p>Year: <span id="student-year"></span></p>
         <p>Email: <span id="student-email"></span></p>
       </div>
-
-      <h5>Current Semester</h5>
+      
+      <h2>Current Semester</h2>
       <ul class="classes-list" id="current-classes">
         <!-- Classes will be populated based on selected student -->
         <li>Select a student to view their current classes</li>
       </ul>
-
+      
       <div class="notes-section">
         <h5>Advising Notes</h5>
         <textarea placeholder="Add notes about this student's academic progress..."></textarea>
@@ -220,11 +279,10 @@
       <span class="close-btn" onclick="closeSearchBar()">&times;</span>
       <div class="form-group searchbar">
         <label for="classNameInput" id="searchlabel">Search Class</label>
-        <input type="text" id="classNameInput" name="keyword" class="form-control"
-          placeholder="Enter class name or ID..." required />
+        <input type="text" id="classNameInput" name="keyword" class="form-control" placeholder="Enter class name or ID..." required />
       </div>
       <button type="button" class="search-button" onclick="searchCourses()">Search</button>
-
+      
       <div class="search-results mt-4">
         <table class="table table-striped">
           <thead>
@@ -300,7 +358,7 @@
         }
       }
     };
-
+    
     const courses = [
       { courseId: 'CSCI1300', courseName: 'Introduction to Computer Science', creditHours: 3 },
       { courseId: 'CSCI2270', courseName: 'Data Structures', creditHours: 4 },
@@ -308,39 +366,39 @@
       { courseId: 'CSCI3753', courseName: 'Operating Systems', creditHours: 3 },
       { courseId: 'CSCI5828', courseName: 'Software Engineering', creditHours: 4 }
     ];
-
+    
     // Global variable to keep track of the Add Class button that invoked the modal
     let currentButton = null;
     let currentStudentId = null;
-
+    
     // Load a student's schedule when selected from the dropdown
     function loadStudentSchedule() {
       const studentId = document.getElementById('student-dropdown').value;
       currentStudentId = studentId;
-
+      
       if (!studentId) {
         document.getElementById('student-info-panel').style.display = 'none';
         document.getElementById('current-classes').innerHTML = '<li>Select a student to view their current classes</li>';
         clearAllSemesters();
         return;
       }
-
+      
       const student = students[studentId];
-
+      
       // Update student info panel
       document.getElementById('student-info-panel').style.display = 'block';
       document.getElementById('student-name').textContent = `${student.firstName} ${student.lastName}`;
       document.getElementById('student-id').textContent = studentId;
       document.getElementById('student-year').textContent = student.year;
       document.getElementById('student-email').textContent = student.email;
-
+      
       // Update current classes list
       const currentClassesList = document.getElementById('current-classes');
       currentClassesList.innerHTML = '';
-
+      
       // Assuming current semester is Fall 2024 for this example
       const currentSemesterClasses = student.scheduledCourses['fall-2024'] || [];
-
+      
       if (currentSemesterClasses.length === 0) {
         const noClassesItem = document.createElement('li');
         noClassesItem.textContent = 'No current classes';
@@ -355,14 +413,14 @@
           }
         });
       }
-
+      
       // Populate semester class containers
       clearAllSemesters();
-
+      
       Object.keys(student.scheduledCourses).forEach(semesterId => {
         const coursesInSemester = student.scheduledCourses[semesterId];
         const semesterContainer = document.getElementById(semesterId);
-
+        
         if (semesterContainer && coursesInSemester) {
           coursesInSemester.forEach(courseId => {
             const course = courses.find(c => c.courseId === courseId);
@@ -373,7 +431,7 @@
         }
       });
     }
-
+    
     // Clear all semester containers
     function clearAllSemesters() {
       document.getElementById('fall-2023').innerHTML = '';
@@ -383,59 +441,59 @@
       document.getElementById('spring-2025').innerHTML = '';
       document.getElementById('summer-2025').innerHTML = '';
     }
-
+    
     // Add a class block to a semester container
     function addClassToSemester(container, courseId, courseName) {
       const classBlock = document.createElement("div");
       classBlock.className = "class-block";
       classBlock.textContent = `${courseId}: ${courseName}`;
-
+      
       // When clicking the class block, show an information bubble
-      classBlock.onclick = function (event) {
+      classBlock.onclick = function(event) {
         showInfoBubble(event, courseId, courseName);
       };
-
+      
       container.appendChild(classBlock);
     }
-
+    
     // When an Add Class button is clicked, open the modal and save a reference to the button
     function openSearchBar(button) {
       if (!currentStudentId) {
         alert("Please select a student first.");
         return;
       }
-
+      
       currentButton = button;
       document.getElementById('searchBarModal').style.display = 'block';
     }
-
+    
     function closeSearchBar() {
       document.getElementById('searchBarModal').style.display = 'none';
     }
-
+    
     // Close modal if the user clicks outside of its content area
-    window.onclick = function (event) {
+    window.onclick = function(event) {
       const modal = document.getElementById('searchBarModal');
       if (event.target === modal) {
         closeSearchBar();
       }
     };
-
+    
     // Search courses based on input
     function searchCourses() {
       const searchTerm = document.getElementById('classNameInput').value.trim().toUpperCase();
       const resultsTable = document.getElementById('search-results-table');
       resultsTable.innerHTML = '';
-
+      
       if (searchTerm === '') {
         return;
       }
-
-      const filteredCourses = courses.filter(course =>
-        course.courseId.includes(searchTerm) ||
+      
+      const filteredCourses = courses.filter(course => 
+        course.courseId.includes(searchTerm) || 
         course.courseName.toUpperCase().includes(searchTerm)
       );
-
+      
       if (filteredCourses.length === 0) {
         const row = resultsTable.insertRow();
         const cell = row.insertCell(0);
@@ -443,39 +501,39 @@
         cell.textContent = 'No courses found matching your search.';
         return;
       }
-
+      
       filteredCourses.forEach(course => {
         const row = resultsTable.insertRow();
-
+        
         const idCell = row.insertCell(0);
         idCell.textContent = course.courseId;
-
+        
         const nameCell = row.insertCell(1);
         nameCell.textContent = course.courseName;
-
+        
         const creditsCell = row.insertCell(2);
         creditsCell.textContent = course.creditHours;
-
+        
         const actionCell = row.insertCell(3);
         const addButton = document.createElement('button');
         addButton.className = 'btn btn-sm custom-btn';
         addButton.textContent = 'Add to Schedule';
-        addButton.onclick = function () {
+        addButton.onclick = function() {
           addClassFromModal(course.courseId, course.courseName, course.creditHours);
         };
         actionCell.appendChild(addButton);
       });
     }
-
+    
     // This function gets called when the Add to Schedule button in the modal is clicked
     function addClassFromModal(courseId, courseName, creditHours) {
       // Find the semester card (parent of the button) and its classes container
       let semesterDiv = currentButton.parentNode;
       let classesContainer = semesterDiv.querySelector('.classes-container');
-
+      
       // Add class to the visual container
       addClassToSemester(classesContainer, courseId, courseName);
-
+      
       // Update the student data (in a real app, this would involve a database update)
       const semesterId = classesContainer.id;
       if (currentStudentId && students[currentStudentId]) {
@@ -484,12 +542,12 @@
         }
         students[currentStudentId].scheduledCourses[semesterId].push(courseId);
       }
-
+      
       // Clear the input and close the modal
       document.getElementById('classNameInput').value = "";
       closeSearchBar();
     }
-
+    
     // This function creates an information bubble near the clicked class block.
     function showInfoBubble(event, courseId, courseName) {
       // Remove any existing bubbles first
@@ -499,12 +557,12 @@
           document.body.removeChild(bubble);
         }
       });
-
+      
       const course = courses.find(c => c.courseId === courseId);
-
+      
       let bubble = document.createElement("div");
       bubble.className = "info-bubble";
-
+      
       let content = `
         <h5>${courseId}: ${courseName}</h5>
         <p>Credit Hours: ${course ? course.creditHours : 'N/A'}</p>
@@ -513,9 +571,9 @@
           <button class="btn btn-sm btn-danger" onclick="removeClassFromSchedule(event, '${courseId}')">Remove Course</button>
         </div>
       `;
-
+      
       bubble.innerHTML = content;
-
+      
       // Position the bubble relative to the clicked element
       bubble.textContent = "More info about " + className + ":\n" + "Credit Hours:";
       Object.assign(bubble.style, {
@@ -526,16 +584,16 @@
       let rect = event.target.getBoundingClientRect();
       bubble.style.top = (rect.top + window.scrollY) + "px";
       bubble.style.left = (rect.right + 10 + window.scrollX) + "px";
-
+      
       document.body.appendChild(bubble);
-
+      
       // Allow the bubble to be dismissed after a few seconds or on any click
-      setTimeout(function () {
+      setTimeout(function() {
         if (document.body.contains(bubble)) {
           document.body.removeChild(bubble);
         }
       }, 3000);
-
+      
       document.addEventListener('click', function closeInfoBubble(e) {
         if (!bubble.contains(e.target) && e.target !== event.target) {
           if (document.body.contains(bubble)) {
@@ -545,28 +603,28 @@
         }
       });
     }
-
+    
     // Function to remove a class from a student's schedule
     function removeClassFromSchedule(event, courseId) {
       // We need to find the class block that corresponds to this course
       const classBlocks = document.querySelectorAll('.class-block');
       let targetBlock = null;
-
+      
       classBlocks.forEach(block => {
         if (block.textContent.includes(courseId)) {
           // This is likely our target
           targetBlock = block;
         }
       });
-
+      
       if (!targetBlock) return;
-
+      
       const semesterContainer = targetBlock.parentNode;
       const semesterId = semesterContainer.id;
-
+      
       // Remove class block from the UI
       targetBlock.parentNode.removeChild(targetBlock);
-
+      
       // Remove the course from the student's data
       if (currentStudentId && students[currentStudentId] && students[currentStudentId].scheduledCourses[semesterId]) {
         const courseIndex = students[currentStudentId].scheduledCourses[semesterId].indexOf(courseId);
@@ -574,26 +632,25 @@
           students[currentStudentId].scheduledCourses[semesterId].splice(courseIndex, 1);
         }
       }
-
+      
       // Remove info bubble
       const infoBubble = event.target.closest('.info-bubble');
       if (document.body.contains(infoBubble)) {
         document.body.removeChild(infoBubble);
       }
-
+      
       // Update current classes list if needed
       if (semesterId === 'fall-2024') {
         loadStudentSchedule();
       }
     }
-
+    
     // Initialize the page
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
       // Set the advisor name (would come from session in a real app)
       document.getElementById('advisor-full-name').textContent = 'Test Advisor';
     });
   </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
 </html>

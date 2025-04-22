@@ -15,20 +15,13 @@
   <div class="main-container">
     <!-- Sidebar for Current Semester -->
     <div class="sidebar">
-      <!-- Current Semester Selection -->
-      <h5>Current Semester</h5>
-      <div class="mb-3">
-        <select class="form-select" id="semester-dropdown" onchange="changeSemester(this.value)">
-          <option value="">Select a semester...</option>
-        </select>
-      </div>
-
-      <!-- Advisor Notes Section -->
-      <h5 class="mt-4">Advising Notes</h5>
-      <div id="advisor-notes" class="p-2 bg-white text-dark rounded mb-3" style="min-height: 100px;">
-        <!-- Notes will be loaded here -->
-        Loading advisor notes...
-      </div>
+      <h2>Current Semester</h2>
+      <ul class="classes-list">
+        <li>Math 101</li>
+        <li>History 202</li>
+        <li>Physics 303</li>
+        <li>Chemistry 404</li>
+      </ul>
     </div>
 
     <!-- Content Area -->
@@ -144,14 +137,14 @@
   <!-- JavaScript -->
   <script>
     // Global variable to keep track of the Add Class button that invoked the modal
-    { { #if student_courses } }
+    {{#if student_courses}}
     let student_courses = {{{ student_courses }}}
-    { {/if } }
-    { { #if currentButtonId } }
+    {{/if}}
+    {{#if currentButtonId}}
     let currentButtonId = document.getElementById('{{{currentButtonId}}}').id;
-    { {else } }
+    {{else}}
     let currentButtonId = null;
-    { {/if } }
+    {{/if}}
     console.log("Current button:", currentButtonId);
     console.log("Courses:", student_courses);
 
@@ -161,7 +154,7 @@
       document.getElementById('searchBarModal').style.display = 'block';
       document.querySelector('input[name="currentButtonId"]').value = currentButton.id;
       console.log("Current button ID:", currentButton.id);
-
+      
     }
 
     function closeSearchBar() {
@@ -180,9 +173,9 @@
     function disableAdded(button, courseId, courseName, creditHours) {
       button.disabled = true;
       button.textContent = 'Added';
-
+  
       addClassFromModal(courseId, courseName, creditHours);
-
+  
       fetch('/addStudentClass', {
         method: 'POST',
         headers: {
@@ -192,19 +185,19 @@
           course_id: courseId
         }),
       })
-        .then(response => {
-          if (!response.ok) {
-            //re-enables button if error
-            button.disabled = false;
-            button.textContent = 'Add';
-            alert('Failed to add class. Please try again.');
-          }
-        })
-        .catch(error => {
-          console.error('Error:', error);
+      .then(response => {
+        if (!response.ok) {
+          //re-enables button if error
           button.disabled = false;
           button.textContent = 'Add';
-        });
+          alert('Failed to add class. Please try again.');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        button.disabled = false;
+        button.textContent = 'Add';
+      });
     }
 
     //function to add new semesters
@@ -213,37 +206,37 @@
         const semesterCount = document.querySelectorAll(".semester").length;
         const newSemester = document.createElement("div");
         newSemester.className = "semester";
-
+    
         newSemester.innerHTML = `
           <h3>Semester ${semesterCount + 1}</h3>
           <div id="sem${semesterCount}" class="classes-container"></div>
           <button onclick="openSearchBar(this)" class="btn custom-btn w-100">Add Class</button>
         `;
-
+    
         //adds and formats new semester box
         const scrollContainer = document.querySelector(".scroll-container");
         if (!scrollContainer) {
           console.error("Scroll container not found");
           return;
         }
-
+    
         scrollContainer.appendChild(newSemester);
         scrollContainer.scrollLeft = scrollContainer.scrollWidth;
-
+    
         if (typeof schedule === 'undefined') {
           console.error("Schedule variable is not defined");
           return;
         }
-
+    
         schedule.push(Array(6).fill(null));
-
+    
         //updates UI
         if (typeof updateUI === 'function') {
           updateUI();
         } else {
           console.error("updateUI function failed");
         }
-
+    
         console.log("New semester added");
       } catch (error) {
         console.error("Error adding new semester:", error);
