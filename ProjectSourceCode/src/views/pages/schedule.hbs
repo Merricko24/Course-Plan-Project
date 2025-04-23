@@ -16,12 +16,8 @@
     <!-- Sidebar for Current Semester -->
     <div class="sidebar">
       <h2>Current Semester</h2>
-      <ul class="classes-list">
-        <li>Math 101</li>
-        <li>History 202</li>
-        <li>Physics 303</li>
-        <li>Chemistry 404</li>
-      </ul>
+      <h5>Welcome, <a style = 'text-align: center;'>{{user.identikey}}</a></h5>
+      
     </div>
 
     <!-- Content Area -->
@@ -76,9 +72,6 @@
       </div>
     </div>
   </div>
-
-  <!-- Footer Partial -->
-  {{> footer}}
 
   <!-- Modal -->
   <form action="/getClasses" method="POST">
