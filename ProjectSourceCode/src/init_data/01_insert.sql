@@ -1,6 +1,6 @@
 
  INSERT INTO students(identikey, password, first_name, last_name, start_term, advisor_id) VALUES 
- ('test2000', '$2a$10$eZ2.mCQqaWsGltXqL9bYMeXYR1yK3vlsRkLUC8TlotToZm3YRqroC', 'test', 'user', 'fa25', 'fesu3567' );
+ ('abab5380', '$2a$10$eZ2.mCQqaWsGltXqL9bYMeXYR1yK3vlsRkLUC8TlotToZm3YRqroC', 'test', 'user', 'fa25', 'fesu3567' );
 
 
  INSERT INTO advisors (identikey, password, first_name, last_name, student_ids) VALUES
