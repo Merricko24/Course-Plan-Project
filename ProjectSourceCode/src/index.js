@@ -163,16 +163,15 @@ try {
       a_or_s = 'students';
     }
     //check if password is correct
-    const userpass = await db.oneOrNone(`SELECT password FROM ${a_or_s} WHERE identikey = '${identikey}'`);
-    const match = await bcrypt.compare(password, userpass.password);
-    if(match) {
-        // console.log("Login success");
-        // console.log(advisor)
-        // console.log(student)
-
-        //student user
-        if(advisor == null) {
-           user =  {
+    const userpass = await db.oneOrNone(`SELECT password FROM ${a_or_s} WHERE identikey = $1`, [identikey]);
+    const match = await bcrypt.compare(password, userpass?.password || '');
+    
+    if (match) {
+      let user;
+    
+      if (advisor == null) {
+        // Student user
+        user = {
             identikey : student.identikey,
             first_name : student.first_name,
             last_name : student.last_name,
@@ -182,24 +181,26 @@ try {
             advisor_id : student.advisor_id,
             student_courses: student.student_courses,
             isAdvisor: false
-            }
-        }
-
-
-        else {
-          //advisor user
-           user =  {
-            identikey : advisor.identikey,
-            first_name : advisor.first_name,
-            last_name : advisor.last_name,
-            email : advisor.email,
-            student_ids: advisor.student_ids,
-            isAdvisor: true
-            }
-       
-        }
-            req.session.user = user;
-            req.session.save();
+        };
+      } else {
+        // Advisor user
+        user = {
+          identikey : advisor.identikey,
+          first_name : advisor.first_name,
+          last_name : advisor.last_name,
+          email : advisor.email,
+          student_ids: advisor.student_ids,
+          isAdvisor: true
+        };
+      }
+    
+      req.session.user = user;
+      req.session.save();
+    } else {
+      return res.status(401).render('pages/login', {
+        message: 'Incorrect password.',
+        error: true
+      });
     }
 
     // Redirect to the appropriate page based on user type
