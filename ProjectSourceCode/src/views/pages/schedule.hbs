@@ -366,7 +366,15 @@
               d3.select(this)
                 .append('div')
                 .classed('class-block', true)
-                .text(data.id)
+                .html(`
+                ${data.id}
+                <div class="tooltip-info">
+                  <strong>${data.name}</strong><br>
+                  ID: ${data.id}<br>
+                  Credits: ${data.credit_hours}<br>
+                  Description: ${data.description}
+                </div>
+              `)
                 .attr('data-course-id', data.id)
                 .call(d3.drag()
                   .on('start', dragstarted)
