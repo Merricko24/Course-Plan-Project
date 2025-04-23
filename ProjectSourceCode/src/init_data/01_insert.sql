@@ -36,4 +36,7 @@ INSERT INTO student_courses (identikey, course_id, course_name, credit_hours,  t
 ('test2000', 'CSCI2270', 'Data something', 4, 'sp26');
 
 
-UPDATE students SET start_term='fa25' WHERE 1=1;
+INSERT INTO advisor_notes (student_identikey, advisor_identikey, note_text) VALUES
+('abab5380', 'fesu3567', 'Student is on track to graduate Fall 2025.'),
+('abab5380', 'fesu3567', 'Discussed switching majors from MechE to Comp Sci.'),
+('anmo3456', 'fesu3567', 'Student expressed interest in research opportunities. Sent follow-up email with available faculty contacts.');
