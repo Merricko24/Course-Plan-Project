@@ -49,7 +49,7 @@ app.use(
 
 // -------------------------------------  DB CONFIG AND CONNECT   ---------------------------------------
 const dbConfig = {
-  host: process.env.POSTGRES_HOST,
+  host: process.env.POSTGRES_HOST || 'db',
   port: process.env.POSTGRES_PORT,
   database: process.env.POSTGRES_DB,
   user: process.env.POSTGRES_USER,
@@ -354,8 +354,24 @@ app.get('/profile', (req, res) => {
 });
 ///////////////
 
-//-----------Courses Route--------------
 
+// Update a course’s term when it’s dragged into a new semester
+app.post('/student_courses/updateTerm', async (req, res) => {
+  const { identikey, course_id, term } = req.body;
+  try {
+    await db.none(
+      `UPDATE student_courses
+         SET term = $1
+       WHERE identikey = $2
+         AND course_id = $3`,
+      [ term, identikey, course_id ]
+    );
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Error updating term:', err);
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
 
 // -------------------------------------  START SERVER   ----------------------------------------------
 

@@ -366,7 +366,7 @@
               d3.select(this)
                 .append('div')
                 .classed('class-block', true)
-                .text(data.name)
+                .text(data.id)
                 .attr('data-course-id', data.id)
                 .call(d3.drag()
                   .on('start', dragstarted)
@@ -463,24 +463,43 @@
         });
       });
 
-      if (dest) {
-        // remove from origin
-        schedule[dragging.semIdx][dragging.slotIdx] = null;
-        // swap if needed
-        const existing = schedule[dest.semIdx][dest.slotIdx];
-        if (existing) {
-          schedule[dragging.semIdx][dragging.slotIdx] = existing;
-        }
-        schedule[dest.semIdx][dest.slotIdx] = dragging.data;
+     if (dest) {
+  const existing = schedule[dest.semIdx][dest.slotIdx];
+  if (!existing) {
+    // only move if the slot is empty
+    schedule[dragging.semIdx][dragging.slotIdx] = null;
+    schedule[dest.semIdx][dest.slotIdx]     = dragging.data;
       }
+    }
 
       updateUI();
+
+            //update database with newly dragged class
+      fetch('/student_courses/updateTerm', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          identikey:   STUDENT_IDENTIKEY,        
+          course_id:   dragging.data.id,
+          term:        semesterMap[dest.semIdx]
+        })
+      })
+      .then(r => r.json())
+      .then(r => {
+        if (!r.success) console.error('save failed', r.error);
+      })
+      .catch(console.error);
+
+
       dragging = null;
     }
     // 5) Initial render
     document.addEventListener('DOMContentLoaded', updateUI);
   </script>
 
+  <script> //inject student identikey into front end
+      const STUDENT_IDENTIKEY = '{{user.identikey}}';
+  </script>
 
 </body>
 
