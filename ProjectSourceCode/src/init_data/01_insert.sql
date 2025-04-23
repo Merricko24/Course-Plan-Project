@@ -1,4 +1,10 @@
 
+ INSERT INTO students(identikey, password, first_name, last_name, start_term, advisor_id) VALUES 
+ ('test2000', '$2a$10$eZ2.mCQqaWsGltXqL9bYMeXYR1yK3vlsRkLUC8TlotToZm3YRqroC', 'test', 'user', 'fa25', 'fesu3567' );
+
+
+ INSERT INTO advisors (identikey, password, first_name, last_name, student_ids) VALUES
+ ('fesu3567', '$2a$10$eZ2.mCQqaWsGltXqL9bYMeXYR1yK3vlsRkLUC8TlotToZm3YRqroC', 'test', 'advisor', ARRAY['test2000']);
  INSERT INTO courses (course_id, course_name, credit_hours, term) VALUES 
 ('CSCI1300', 'Introduction to Computer Science', 3, 'fa25'),
 ('CSCI2270', 'Data Structures', 4, 'fa25'),
@@ -36,7 +42,7 @@ INSERT INTO student_courses (identikey, course_id, course_name, credit_hours,  t
 ('test2000', 'CSCI2270', 'Data something', 4, 'sp26');
 
 
-INSERT INTO advisor_notes (student_identikey, advisor_identikey, note_text) VALUES
-('abab5380', 'fesu3567', 'Student is on track to graduate Fall 2025.'),
-('abab5380', 'fesu3567', 'Discussed switching majors from MechE to Comp Sci.'),
-('anmo3456', 'fesu3567', 'Student expressed interest in research opportunities. Sent follow-up email with available faculty contacts.');
+ INSERT INTO advisor_notes (student_identikey, advisor_identikey, note_text) VALUES
+ ('test2000', 'fesu3567', 'Student is on track to graduate Fall 2025.');
+-- ('abab5380', 'fesu3567', 'Discussed switching majors from MechE to Comp Sci.'),
+-- ('anmo3456', 'fesu3567', 'Student expressed interest in research opportunities. Sent follow-up email with available faculty contacts.');

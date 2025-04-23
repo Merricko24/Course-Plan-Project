@@ -97,7 +97,7 @@
         <label for="classNameInput" id="searchlabel">Search Class</label>
         <input type="text" id="classNameInput" name="keyword" class="form-control" placeholder="Enter class name or ID..." required />
       </div>
-      <button type="button" class="search-button" onclick="searchCourses()">Search</button>
+      <button type="button" class="custom-btn" onclick="searchCourses()">Search</button>
       
       <div class="search-results mt-4">
         <table class="table table-striped">
@@ -260,17 +260,31 @@
     
     // Add a class block to a semester container
     function addClassToSemester(container, courseId, courseName) {
-      const classBlock = document.createElement("div");
-      classBlock.className = "class-block";
-      classBlock.textContent = `${courseId}: ${courseName}`;
-      
-      // When clicking the class block, show an information bubble
-      classBlock.onclick = function(event) {
-        showInfoBubble(event, courseId, courseName);
-      };
-      
-      container.appendChild(classBlock);
-    }
+  const course = courses.find(c => c.courseId === courseId);
+
+  const classBlock = document.createElement("div");
+  classBlock.className = "class-block";
+  classBlock.style.position = "relative"; // needed for absolute tooltip positioning
+
+  // Main visible text
+  const mainText = document.createElement("div");
+  mainText.textContent = `${courseId}`;
+
+  // Tooltip div (initially hidden)
+  const tooltip = document.createElement("div");
+  tooltip.className = "tooltip-info";
+  tooltip.innerHTML = `
+    <strong>${courseName}</strong><br>
+    ID: ${courseId}<br>
+    Credit Hours: ${course ? course.creditHours : 'N/A'}
+    Description: ${course ? course.description : 'N/A'}
+  `;
+
+  classBlock.appendChild(mainText);
+  classBlock.appendChild(tooltip);
+  container.appendChild(classBlock);
+}
+
     
     // When an Add Class button is clicked, open the modal and save a reference to the button
     function openSearchBar(button) {
