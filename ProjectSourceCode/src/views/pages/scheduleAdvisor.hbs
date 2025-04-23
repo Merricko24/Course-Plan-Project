@@ -21,12 +21,12 @@
       
       <div class="student-select">
         <h5>Select Student</h5>
-        <select id="student-dropdown" onchange="">
+        <select id="student-dropdown" onchange="loadStudentSchedule()">
           <option value="">Choose a student...</option>
           <option value="joab1234">John Applebee</option>
-          {{#each real_students}}
-          <option value="{{this.identikey}}">{{this.firstName}} {{this.lastName}}</option>
-          {{/each}}
+          <option value="coca9230">Coleman Caldwell</option>
+          <option value="bpit2018">Brad Pitt</option>
+          <option value="mann2000">Man Name</option>
         </select>
       </div>
       
@@ -46,11 +46,8 @@
       
       <div class="notes-section">
         <h5>Advising Notes</h5>
-        <form action="/submit_notes" method="POST">
-        <input type="text" style = "width: 200px; height:100px;" name = 'notes'id="notes" class="form-control" placeholder="Add notes about this student's academic progress..."></textarea>
-        <input type="hidden" name = 'student_identikey' id = 'student_identikey' value = 'test2000',>
-        <button type = 'submit' class="btn custom-btn w-100 mt-2">Save Notes</button>
-        </form>
+ <textarea style="width: 100%; height: 100px;" name="notes" id="notes" class="form-control" placeholder="Add notes about this student's academic progress"></textarea>
+        <button class="btn custom-btn w-100 mt-2">Save Notes</button>
       </div>
     </div>
 
@@ -122,12 +119,6 @@
 
   <!-- JavaScript -->
   <script>
-    {{#if real_students}}
-    console.log("Real students data is available.");
-    let real_students = {{{real_students}}};
-    {{/if}}
-    console.log(real_students);
-    
     // Sample data for demonstration
     const students = {
       'joab1234': {
