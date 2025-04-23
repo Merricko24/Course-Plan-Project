@@ -8,8 +8,9 @@ CREATE TABLE students (
   last_name VARCHAR(50) NOT NULL,
   email VARCHAR(200),
   year VARCHAR(15),
+  start_term VARCHAR(20),
   advisor_id VARCHAR(20),
-  taken_courses VARCHAR(50)[]
+  student_courses VARCHAR(50)[]
 );
 CREATE TABLE advisors (
   identikey VARCHAR(20) PRIMARY KEY NOT NULL,
@@ -19,6 +20,16 @@ CREATE TABLE advisors (
   email VARCHAR(200),
   --array of students per advisor
   student_ids VARCHAR(20)[]
+);
+
+
+DROP TABLE IF EXISTS advisor_notes;
+CREATE TABLE advisor_notes (
+  id SERIAL PRIMARY KEY,
+  student_identikey VARCHAR(20) REFERENCES students(identikey),
+  advisor_identikey VARCHAR(20) REFERENCES advisors(identikey),
+  note_text TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 --This is the code for student courses
@@ -45,6 +56,8 @@ DROP TABLE IF EXISTS student_courses;
 CREATE TABLE student_courses (
   identikey VARCHAR(20) NOT NULL,
   course_id VARCHAR(20) NOT NULL,
+  course_name VARCHAR(50) NOT NULL,
+  credit_hours NUMERIC NOT NULL,
   term VARCHAR(20) NOT NULL
 );
 

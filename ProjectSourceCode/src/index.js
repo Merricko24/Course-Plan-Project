@@ -7,6 +7,7 @@ const pgp = require('pg-promise')();
 const bodyParser = require('body-parser');
 const session = require('express-session');
  const bcrypt = require('bcryptjs'); // Added bcrypt for password hashing
+const { error } = require('console');
 app.use(express.static(__dirname + ''));
 
 app.use('/resources', express.static(path.join(__dirname, 'resources')));
@@ -48,8 +49,8 @@ app.use(
 
 // -------------------------------------  DB CONFIG AND CONNECT   ---------------------------------------
 const dbConfig = {
-  host: 'db',
-  port: 5432,
+  host: process.env.POSTGRES_HOST || 'db',
+  port: process.env.POSTGRES_PORT,
   database: process.env.POSTGRES_DB,
   user: process.env.POSTGRES_USER,
   password: process.env.POSTGRES_PASSWORD,
@@ -68,6 +69,8 @@ db.connect()
 
 // -------------------------------------  ROUTES   ----------------------------------------------
 
+let user = null;
+
 // A simple welcome route
 app.get('/welcome', (req, res) => {
   res.json({ status: 'success', message: 'Welcome!' });
@@ -79,7 +82,7 @@ app.get('/register', (req, res) => {
 });
 
 app.get('/', (req, res) => {
-  res.render('pages/login');
+  res.render('pages/home');
 });
 
 // Handle user registration
@@ -90,12 +93,12 @@ app.post('/register', async (req, res) => {
   try {
     const { first_name, last_name, identikey, password, isAdvisor} = req.body;
     if (!first_name || !last_name || !password || !identikey) {
-      return res.status(400).json({ message: 'All fields are required' });
+      return res.status(400).render('pages/register', {message: 'All fields are required' , error: true });
     }
     // Validate identikey format: 4 letters followed by 4 digits
     const identikeyRegex = /^[a-zA-Z]{4}\d{4}$/;
     if (!identikeyRegex.test(identikey)) {
-      return res.status(400).json({ message: 'Invalid identikey format' });
+      return res.status(400).render('pages/register', { message: 'Invalid identikey format', error: true });
     }
   
     const studentOrAdvisor = isAdvisor == 'on' ? 'advisors' : 'students';
@@ -103,23 +106,26 @@ app.post('/register', async (req, res) => {
     await db.oneOrNone(`SELECT * FROM ${studentOrAdvisor} WHERE identikey = '${identikey}'`)
     .then(async (existingUser) => {
       if (existingUser) {
-        return res.status(400).json({ message: 'User already exists' });
+        return res.status(400).render('pages/register', { message: 'User already exists', error: true });
       }
 
 
       // Hash the password before storing
       const hashedPassword = await bcrypt.hash(password, 10);
 
-       const insertUserQuery = `INSERT INTO ${studentOrAdvisor} (first_name, last_name, password, identikey) VALUES ('${first_name}', '${last_name}', '${hashedPassword}', '${identikey}')`;
+       let insertUserQuery = `INSERT INTO ${studentOrAdvisor} (first_name, last_name, password, identikey) VALUES ('${first_name}', '${last_name}', '${hashedPassword}', '${identikey}');`;
+       
+       //if student registering, make their start term Fall 2025 by default. Otherwise search and add class will not work
+       //Student schedule mapping and search is based off of student's start term
+       if(studentOrAdvisor == 'students') {
+        insertUserQuery += `UPDATE students SET start_term='fa25' WHERE identikey = '${identikey}'`
+       }
        db.any(insertUserQuery)
        .then(() => {
 
           // Registration successful
-          res.status(201).json({ message: 'User registered successfully' });
+          res.redirect('/login');
         })
-        .finally(() => {
-          res.render('pages/schedule')
-        });
     });
   } catch (error) {
     console.error('Error during registration:', error);
@@ -133,18 +139,21 @@ app.get('/login', (req, res) => {
 });
 
 
+// Handle user login
+
 app.post('/login', async (req, res) =>  {
   const {identikey, password} = req.body;
 try {
     if(!identikey || !password) {
-      return res.status(400).json({ message: 'All fields are required' });
+      return res.status(400).render('pages/login', {message: 'All fields are required', error: true });
     }
     //check if advisor or student
-    const advisor = await db.oneOrNone(`SELECT identikey FROM advisors WHERE identikey = '${identikey}'`)
-    const student = await db.oneOrNone(`SELECT identikey FROM students WHERE identikey = '${identikey}'`)
+    const advisor = await db.oneOrNone(`SELECT * FROM advisors WHERE identikey = '${identikey}'`)
+    const student = await db.oneOrNone(`SELECT * FROM students WHERE identikey = '${identikey}'`)
     
     if(!advisor && !student) {
-      return res.status(400).json({ message: 'User does not exist' });
+      return res.status(400).render('pages/login', {message: 'User does not exist', error: true });
+      
     }
     let a_or_s = null;
     if(advisor) {
@@ -154,21 +163,49 @@ try {
       a_or_s = 'students';
     }
     //check if password is correct
-    const user = await db.oneOrNone(`SELECT password FROM ${a_or_s} WHERE identikey = '${identikey}'`);
-    const match = await bcrypt.compare(password, user.password);
+    const userpass = await db.oneOrNone(`SELECT password FROM ${a_or_s} WHERE identikey = '${identikey}'`);
+    const match = await bcrypt.compare(password, userpass.password);
     if(match) {
-       // console.log("Login success");
-            user.identikey = identikey;
-            user.password = password;
+        // console.log("Login success");
+        // console.log(advisor)
+        // console.log(student)
+
+        //student user
+        if(advisor == null) {
+           user =  {
+            identikey : student.identikey,
+            first_name : student.first_name,
+            last_name : student.last_name,
+            email : student.email,
+            year : student.year,
+            start_term : student.start_term,
+            advisor_id : student.advisor_id,
+            student_courses: student.student_courses,
+            isAdvisor: false
+            }
+        }
+
+
+        else {
+          //advisor user
+           user =  {
+            identikey : advisor.identikey,
+            first_name : advisor.first_name,
+            last_name : advisor.last_name,
+            email : advisor.email,
+            student_ids: advisor.student_ids,
+            isAdvisor: true
+            }
+       
+        }
             req.session.user = user;
             req.session.save();
     }
 
     // Redirect to the appropriate page based on user type
     if (a_or_s === 'advisors') {
-      res.render('pages/scheduleAdvisor', {
-        user: req.session.user,
-      });
+      //console.log("going to advisor page");
+      res.redirect('/scheduleAdvisor');
     } else {
       //redirect to student schedule
       res.redirect('/schedule');
@@ -199,13 +236,9 @@ app.use(auth);
 app.post('/addStudentClass', async (req, res) => {
   const {course_id} = req.body;
   const identikey = req.session.user.identikey;
-  const chosenClassFromDb = await db.oneOrNone(`SELECT * FROM courses WHERE course_id = '${course_id}'`);
-  console.log("Chosen Class:");
-  console.log(chosenClassFromDb);
-  const course_id_from_db = chosenClassFromDb.course_id;
-  const course_term_from_db = chosenClassFromDb.term;
+  const cDB = await db.oneOrNone(`SELECT * FROM courses WHERE course_id = '${course_id}'`);
 
-  await db.none(`INSERT INTO student_courses (identikey, course_id, term) VALUES ('${identikey}', '${course_id_from_db}', '${course_term_from_db}')`)
+  await db.none(`INSERT INTO student_courses (identikey, course_id, course_name, credit_hours, term) VALUES ('${identikey}', '${cDB.course_id}', '${cDB.course_name}', ${cDB.credit_hours}, '${cDB.term}')`)
   .then(() => {
     res.redirect('/schedule');
 
@@ -217,22 +250,21 @@ app.post('/addStudentClass', async (req, res) => {
 //----------Class Search Route ---------
 app.post('/getClasses', async (req, res) =>  {
   try {
-    const {keyword, currentButtonId, student_courses} = req.body;
-    console.log(req.body);
-    let term = currentButtonId;
-    console.log((student_courses));
-    // if(!keyword) {
-    //   return res.status(400).json({ message: 'No keyword provided' });
-    // }
+    const {keyword, currentButtonId, semesterToQuery} = req.body;
+   // console.log(req.body);
+    let term = semesterToQuery;
+    //keep student courses handy and update them
+    let student_courses = await db.any(`SELECT * FROM student_courses WHERE identikey = '${req.session.user.identikey}'`)
     // Get courses from database
     await db.any(`SELECT * FROM courses WHERE (term = '${term}') AND ((course_id ILIKE '%${keyword}%') OR (course_name ILIKE '%${keyword}%')) `)
     .then((courses) => {
       res.render('pages/schedule', {
         courses: courses,
         user: req.session.user,
-        keyword: keyword,
-        currentButtonId: term,
-        student_courses: (student_courses)
+        keyword,
+        currentButtonId,
+        semesterToQuery,
+        student_courses: JSON.stringify(student_courses)
       })
 
 
@@ -250,28 +282,50 @@ app.post('/getClasses', async (req, res) =>  {
 //-----------Logout Route--------------
 app.get('/logout', (req, res) => {
   res.render('pages/logout')
+  user = null;
   req.session.destroy();
 });
 
-//-----------Login Route--------------
-app.get('/schedule', (req, res) => {
-  //fetch student schedule from db
-  const identikey = req.session.user.identikey;
-  db.any(`SELECT * FROM courses JOIN student_courses ON courses.course_id = student_courses.course_id WHERE identikey = '${identikey}'`)
-  .then((student_courses) => {
-    console.log(student_courses);
-    // Render the schedule page with student data
-    res.render('pages/schedule', {
+
+
+//----------Schedule page Routes--------------
+// app.get('/schedule', (req, res) => {
+//   res.render('pages/schedule')
+// });
+
+
+////RUN docker and TEST NEW SCHEDULE THING/////////
+
+
+
+const router = express.Router();
+// const pool = require('../index');
+
+
+app.get('/schedule', async (req, res) => {
+
+  try {
+    // Pass the courses data to the template as JSON data
+    let student_courses = await db.any(`SELECT * FROM student_courses WHERE identikey = '${req.session.user.identikey}'`)
+    res.render('pages/schedule', { 
       user: req.session.user,
-      student_courses: JSON.stringify(student_courses),
+      courses: null,
+      student_courses: JSON.stringify(student_courses) 
     });
-  })
+
+  } catch (err) {
+    console.error('Error retrieving courses for schedule:', err);
+    res.status(500).send('Server Error');
+  }
+
 });
+
 
 //-----------Advisor Register After Route--------------
 
 app.get('/scheduleAdvisor', (req, res) => {
   const user = req.session.user;
+
   if (!user || !user.isAdvisor) {
     return res.redirect('/login');
   }
@@ -290,9 +344,9 @@ app.get('/profile', (req, res) => {
     return res.status(401).send('Not authenticated');
   }
   try {
-    res.status(200).json({
+    res.render('pages/profile'), {
       user: req.session.user,
-    });
+    };
   } catch (err) {
     console.error('Profile error:', err);
     res.status(500).send('Internal Server Error');
@@ -300,8 +354,24 @@ app.get('/profile', (req, res) => {
 });
 ///////////////
 
-//-----------Courses Route--------------
 
+// Update a course’s term when it’s dragged into a new semester
+app.post('/student_courses/updateTerm', async (req, res) => {
+  const { identikey, course_id, term } = req.body;
+  try {
+    await db.none(
+      `UPDATE student_courses
+         SET term = $1
+       WHERE identikey = $2
+         AND course_id = $3`,
+      [ term, identikey, course_id ]
+    );
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Error updating term:', err);
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
 
 // -------------------------------------  START SERVER   ----------------------------------------------
 

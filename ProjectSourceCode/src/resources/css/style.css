@@ -1,7 +1,7 @@
 /* Navigation bar */
 .navbar {
   background-color: #c8b273;
-  padding: 10px 20px;
+  padding: 0px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -20,29 +20,35 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 80vh; /* Full viewport height */
+  height: 80vh;
+  /* Full viewport height */
 }
 
 /* Flexbox container */
 .center-content {
   display: flex;
   width: 100%;
-  height: 100vh; /* Full viewport height */
+  height: 100vh;
+  /* Full viewport height */
 }
 
 /* Left Section (Logo) */
 .left-section {
-  flex: 1; /* Take up 50% of the screen width */
+  flex: 1;
+  /* Take up 50% of the screen width */
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%; /* Full height of the screen */
+  height: 100%;
+  /* Full height of the screen */
 }
 
 /* Logo Styles */
 .center-logo img {
-  max-width: 100%;  /* Makes the image occupy 80% of the left section */
-  height: auto;    /* Maintains aspect ratio */
+  max-width: 100%;
+  /* Makes the image occupy 80% of the left section */
+  height: auto;
+  /* Maintains aspect ratio */
 }
 
 /* Right Section (Registration Form) */
@@ -57,13 +63,16 @@
 
 /* Logo Styling */
 .center-logo img {
-  width: 400px; /* Adjust the width of the logo */
-  height: auto; /* Maintain the aspect ratio */
+  width: 400px;
+  /* Adjust the width of the logo */
+  height: auto;
+  /* Maintain the aspect ratio */
 }
 
 /* Registration Form Container */
 .register-form {
-  background-color: #e0e0e0; /* light gray */
+  background-color: #e0e0e0;
+  /* light gray */
   padding: 20px;
   border-radius: 6px;
   border: 1px solid black;
@@ -112,6 +121,15 @@
   margin: 20px 0;
 }
 
+/* table wrapper (for scrolling searched classes) */
+.table-scroll-wrap {
+  display: inline-block;
+  max-height: 400px;
+  margin-top: 20px;
+  width: 100%;
+  overflow: auto;
+}
+
 /* Submit Button */
 .next-btn {
   background-color: #e0e0e0;
@@ -142,7 +160,8 @@
 }
 
 .custom-btn {
-  background-color: #ccb478 !important;   /* gold */
+  background-color: #ccb478 !important;
+  /* gold */
   border: 1px solid black !important;
   color: black !important;
   font-weight: bold !important;
@@ -152,141 +171,330 @@
 }
 
 .custom-btn:hover {
-  background-color: #bba35f !important;  /* darker gold on hover */
+  background-color: #bba35f !important;
+  /* darker gold on hover */
 }
 
 .theme-link {
-  color: #ccb478;           /* Gold tone to match your buttons */
+  color: #ccb478;
+  /* Gold tone to match your buttons */
   font-weight: bold;
   text-decoration: none;
 }
 
 .theme-link:hover {
-  color: #bba35f;           /* Slightly darker on hover */
+  color: #bba35f;
+  /* Slightly darker on hover */
   text-decoration: underline;
 }
 
-    /* Reset and base styles */
-    * {
-      box-sizing: border-box;
-    }
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      font-family: Arial, sans-serif;
-      background-color: #f5f5f5;
-    }
-    
-    /* Main container: sidebar + content area */
-    .main-container {
-      display: flex;
-      min-height: calc(100vh - 115px); /* Reserve space for the footer partial */
-    }
+/* Reset and base styles */
+* {
+  box-sizing: border-box;
+}
 
-    /* Sidebar for current semester classes */
-    .sidebar {
-      width: 300px;
-      background-color: #ccc;
-      padding: 20px;
-      overflow-y: auto;
-    }
-    .sidebar h2 {
-      text-align: center;
-      margin-top: 0;
-    }
-    .classes-list {
-      list-style: none;
-      padding: 0;
-    }
-    .classes-list li {
-      background-color: #fff;
-      margin-bottom: 10px;
-      padding: 10px;
-      border-radius: 4px;
-    }
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: Arial, sans-serif;
+  background-color: #f5f5f5;
+}
 
-    /* Content area for horizontally scrolling semester cards */
-    .content {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      padding: 20px;
-    }
-    .scroll-container {
-      flex: 1;
-      overflow-x: auto;
-      white-space: nowrap;
-    }
-    .semester {
-      display: inline-block;
-      vertical-align: top;
-      width: 250px;
-      margin-right: 15px;
-      border: 2px solid #ccc;
-      border-radius: 8px;
-      background-color: #fff;
-      padding: 15px;
-      box-sizing: border-box;
-      height: 100%;
-    }
-    /* Container to hold the class blocks added dynamically */
-    .classes-container {
-      margin-bottom: 10px;
-    }
-    /* Styling for the added class block */
-    .class-block {
-      background-color: #e9ecef;
-      padding: 8px;
-      margin-bottom: 5px;
-      border-radius: 4px;
-      cursor: pointer;
-    }
+/* Main container: sidebar + content area */
+.main-container {
+  display: flex;
+  min-height: calc(100vh - 115px);
+  /* Reserve space for the footer partial */
+}
 
-    /* Modal styling */
-    #searchBarModal {
-      display: none; 
-      position: fixed;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.7); 
-    }
-    #searchlabel {
-      color: white;
-      font-weight: bold;
-      font-size: 30px;
-    }
-     .modal-content {
-      background-color: #fff;
-      padding-top: 2%;
-      width: 300px;
-      border-radius: 8px;
-      text-align: top;
-      position: relative;
-      max-height: 80vh;
-      overflow-y: auto;
-    } 
-    .close-btn {
-      position: absolute;
-      top: 10px;
-      right: 15px;
-      font-size: 24px;
-      cursor: pointer;
-      color: #999;
-    }
-    .close-btn:hover {
-      color: #333;
-    }
-    input[type="text"] {
-      width: 80%;
-      padding: 8px;
-      margin: 10px 0;
-    }
-    .search-button {
-      padding: 8px 12px;
-      margin-bottom: 10px;
-      cursor: pointer;
-    }
+/* Sidebar for current semester classes */
+.sidebar {
+  width: 300px;
+  background-color: #000000;
+  padding: 20px;
+  overflow-y: auto;
+  color: white;
+}
+
+.sidebar h2 {
+  text-align: center;
+  margin-top: 0;
+}
+
+/* Override any conflicting styles */
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+.classes-list {
+  list-style: none;
+  padding: 0;
+}
+
+.classes-list li {
+  background-color: #fff;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+/* Content area for horizontally scrolling semester cards */
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 20px;
+}
+
+.scroll-container {
+  flex: 1;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.semester {
+  display: inline-block;
+  vertical-align: top;
+  width: 250px;
+  margin-right: 15px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  background-color: #fff;
+  padding: 15px;
+  box-sizing: border-box;
+  height: 100%;
+}
+
+/* Container to hold the class blocks added dynamically */
+.classes-container {
+  margin-bottom: 10px;
+}
+
+/* Styling for the added class block */
+.class-block {
+  padding: 8px;
+  margin-bottom: 5px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Modal styling */
+#searchBarModal {
+  display: none;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+#searchlabel {
+  color: white;
+  font-weight: bold;
+  font-size: 30px;
+}
+
+.modal-content {
+  background-color: #fff;
+  padding-top: 10%;
+  width: 300px;
+  border-radius: 8px;
+  text-align: top;
+  position: relative;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 24px;
+  cursor: pointer;
+  color: #999;
+}
+
+.close-btn:hover {
+  color: #333;
+}
+
+input[type="text"] {
+  width: 80%;
+  padding: 8px;
+  margin: 10px 0;
+}
+
+.search-button {
+  padding: 8px 12px;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+
+/* For Semester slots in shedule page */
+.classes-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.slot {
+  flex: 1;
+  /* equally share height */
+  min-height: 50px;
+  /* visible even if empty */
+  border: 1px dashed #ccc;
+  position: relative;
+  /* for positioning a dragged item back in */
+}
+
+.class-block {
+  background: #e9ecef;
+  padding: 8px;
+  border-radius: 4px;
+  cursor: move;
+  position: absolute;
+  /* we’ll absolutely position inside its slot */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+
+
+/* when you’re dragging, lift the block out of the slot and fix its size */
+.class-block.dragging {
+  position: fixed !important;
+  /* float over everything */
+  z-index: 1000;
+  pointer-events: none;
+  /* let the slots beneath get the mouse */
+  opacity: 0.9;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  cursor: grabbing;
+}
+
+/* optional: make it look “lighter” while you drag
+.class-block.dragging {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+} */
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #fafafa;
+}
+
+main {
+  padding-top: 4rem;
+}
+
+.hero {
+  padding: 4rem 0 0;
+  background-color: white;
+  text-align: center;
+}
+
+.hero-images {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  margin-bottom: 0;
+  flex-wrap: wrap;
+}
+
+.hero-images img {
+  width: 500px;
+  max-width: 200%;
+  border-radius: 10px;
+  height: 400px;
+}
+
+.hero-text {
+  background-color: #f0f0f0;
+  /* Light grey background */
+  padding: 3rem 2rem;
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.hero-text h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.hero-text p {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  margin: 0 auto;
+  max-width: 700px;
+}
+
+.how-it-works {
+  background-color: #ebe7cc;
+  padding: 3rem 2rem;
+  text-align: center;
+}
+
+.how-it-works h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.how-it-works p {
+  max-width: 600px;
+  margin: 0 auto;
+  font-size: 1.1rem;
+  line-height: 1.5;
+}
+
+.cta {
+  text-align: center;
+  margin: 3rem 0;
+}
+
+.cta a {
+  background-color: #c9b27c;
+  padding: 1rem 2rem;
+  border-radius: 30px;
+  text-decoration: none;
+  color: black;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.cta a:hover {
+  background-color: #b29f66;
+}
+
+.class-block {
+  position: relative;
+  cursor: pointer;
+}
+
+.class-block .tooltip-info {
+  visibility: hidden;
+  background-color: #c8b273;
+  color: #333;
+  text-align: left;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #656565;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.2);
+  position: absolute;
+  z-index: 1000;
+  top: 110%; /* Position below the class block */
+  left: 0;
+  white-space: nowrap;
+  font-size: 0.9rem;
+}
+
+.class-block:hover .tooltip-info {
+  visibility: visible;
+}

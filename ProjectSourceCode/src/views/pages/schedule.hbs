@@ -1,6 +1,6 @@
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,18 +9,15 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="../../resources/css/style.css" />
 </head>
+
 <body>
   <!-- Main Container -->
   <div class="main-container">
     <!-- Sidebar for Current Semester -->
     <div class="sidebar">
       <h2>Current Semester</h2>
-      <ul class="classes-list">
-        <li>Math 101</li>
-        <li>History 202</li>
-        <li>Physics 303</li>
-        <li>Chemistry 404</li>
-      </ul>
+      <h5>Welcome, <a style = 'text-align: center;'>{{user.identikey}}</a></h5>
+      
     </div>
 
     <!-- Content Area -->
@@ -28,36 +25,47 @@
       <div class="scroll-container">
         <!-- Each semester now has a container for class blocks and its Add Class button -->
         <div class="semester">
-          <h3>Fall 2023</h3>
-          <div class="classes-container" id="fa23-container"></div>
-          <button onclick="openSearchBar(this)" id="fa23" class="btn custom-btn w-100">Add Class</button>
+          <h3>Semester 1</h3>
+          <div id="sem0" class="classes-container"></div>
+          <button onclick="openSearchBar(this)" class="btn custom-btn w-100">Add Class</button>
         </div>
         <div class="semester">
-          <h3>Spring 2024</h3>
-          <div class="classes-container" id = "sp24-container"></div>
-          <button onclick="openSearchBar(this)" id="sp24" class="btn custom-btn w-100">Add Class</button>
+          <h3>Semester 2</h3>
+          <div id="sem1" class="classes-container"></div>
+          <button onclick="openSearchBar(this)" class="btn custom-btn w-100">Add Class</button>
         </div>
         <div class="semester">
-          <h3>Summer 2024</h3>
-          <div class="classes-container" id = "su24-container"></div>
-          <button onclick="openSearchBar(this)" id="su24" class="btn custom-btn w-100">Add Class</button>
+          <h3>Semester 3</h3>
+          <div id="sem2" class="classes-container"></div>
+          <button onclick="openSearchBar(this)" class="btn custom-btn w-100">Add Class</button>
         </div>
         <div class="semester">
-          <h3>Fall 2024</h3>
-          <div class="classes-container" id = "fa24-container"></div>
-          <button onclick="openSearchBar(this)" id = 'fa24'class="btn custom-btn w-100">Add Class</button>
+          <h3>Semester 4</h3>
+          <div id="sem3" class="classes-container"></div>
+          <button onclick="openSearchBar(this)" class="btn custom-btn w-100">Add Class</button>
         </div>
         <div class="semester">
-          <h3>Spring 2025</h3>
-          <div class="classes-container" id= "sp25-container"></div>
-          <button onclick="openSearchBar(this)" id= 'sp25' class="btn custom-btn w-100">Add Class</button>
+          <h3>Semester 5</h3>
+          <div id="sem4" class="classes-container"></div>
+          <button onclick="openSearchBar(this)" class="btn custom-btn w-100">Add Class</button>
         </div>
         <div class="semester">
-          <h3>Summer 2025</h3>
-          <div class="classes-container" id = "su25-container"></div>
-          <button onclick="openSearchBar(this)" id = 'su25' class="btn custom-btn w-100">Add Class</button>
+          <h3>Semester 6</h3>
+          <div id="sem5" class="classes-container"></div>
+          <button onclick="openSearchBar(this)" class="btn custom-btn w-100">Add Class</button>
+        </div>
+        <div class="semester">
+          <h3>Semester 7</h3>
+          <div id="sem6" class="classes-container"></div>
+          <button onclick="openSearchBar(this)" class="btn custom-btn w-100">Add Class</button>
+        </div>
+        <div class="semester">
+          <h3>Semester 8</h3>
+          <div id="sem7" class="classes-container"></div>
+          <button onclick="openSearchBar(this)" class="btn custom-btn w-100">Add Class</button>
         </div>
       </div>
+
       <!-- Add semester button -->
       <div class="add-semester">
         <button onclick="addSemester()" class="btn custom-btn w-100">Add Semester</button>
@@ -65,179 +73,435 @@
     </div>
   </div>
 
-  <!-- Footer Partial -->
-  {{> footer}}
-
   <!-- Modal -->
   <form action="/getClasses" method="POST">
-  {{#if keyword}}
+    {{#if keyword}}
     <div id="searchBarModal" style="display: block">
-  {{else }}
-    <div id="searchBarModal" style="display: none;">
-  {{/if}}
+      {{else}}
+      <div id="searchBarModal" style="display: none;">
+        {{/if}}
 
-      <div class="modal-content"></div>
+        <div class="modal-content"></div>
         <span class="close-btn" onclick="closeSearchBar()">&times;</span>
         <div class="form-group searchbar">
-          <label for="classNameInput" id = 'searchlabel'>Search Class</label>
-          <input type="text" id="classNameInput" name="keyword" class="form-control" placeholder="Enter class name..."/>
-          <input type="hidden" name="currentButtonId" value='{{currentButtonId}}'/>
-          <input type="hidden" name="student_courses" value='{{{student_courses}}}'/>
-          
-        </div>
-        <button type="submit" class="search-button" >Search</button>
-          </form>
-          {{#if courses}}
-          {{> searchTable}}
-          {{/if}}
- 
-    </div>
-    </div>
+          <label for="classNameInput" id='searchlabel'>Search Class</label>
+          <input type="text" id="classNameInput" name="keyword" class="form-control"
+            placeholder="Enter class name..." />
+          <input type="hidden" name = 'currentButtonId' id = 'currentButtonId',>
+          <input type="hidden" name="semesterToQuery" id = 'semesterToQuery'/>
+          <input type="hidden" name="student_courses" value='{{{student_courses}}}' />
 
+        </div>
+        <button type="submit" class="btn custom-btn w-100">Search</button>
+        </form>
+      {{#if courses}}
+      {{> searchTable}}
+      {{/if}}
+ 
+        
+      </div>
+
+
+      {{!-- {{#if courses}}
+      <div style="margin-top: 20px;">
+        <!-- display courses in modal -->
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Course ID</th>
+              <th>Course Name</th>
+              <th>Credit Hours</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each courses}}
+            <tr>
+              <td>{{course_id}}</td>
+              <td>{{course_name}}</td>
+              <td>{{credit_hours}}</td>
+              <td>
+                <button type="button" id="add-btn-{{course_id}}" class="btn btn-success"
+                  onclick="disableAdded(this, '{{course_id}}', '{{course_name}}', {{credit_hours}})">
+                  Add
+                </button>
+              </td>
+            </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </div>
+      {{/if}} --}}
+    </div>
+ 
 
   <!-- JavaScript -->
   <script>
-       // Global variable to keep track of the Add Class button that invoked the modal
+    // Global variable to keep track of the Add Class button that invoked the modal
+    
+    //CHECK if student courses on startup. if so, populate table with them!!!!!!!!!!!
+    //NOW!!!!!!!
+    //DO IT!
+    
     {{#if student_courses}}
-    let student_courses = {{{student_courses}}}
+    console.log({{{student_courses}}})
+    let student_courses = {{{ student_courses }}}
+ 
     {{/if}}
     {{#if currentButtonId}}
-    let currentButtonId = document.getElementById('{{{currentButtonId}}}').id;
+    console.log("BUTTON FOUND")
+    let currentButtonId = '{{currentButtonId}}'
+    document.getElementById('currentButtonId').value = currentButtonId
     {{else}}
     let currentButtonId = null;
     {{/if}}
-    console.log("Current button:", currentButtonId);
-    console.log("Courses:", student_courses);
-    
+        {{#if semesterToQuery}}
+    document.getElementById('semesterToQuery').value = '{{semesterToQuery}}'
+    {{/if}}
+
     // When an Add Class button is clicked, open the modal and save a reference to the button
     function openSearchBar(button) {
       currentButton = button;
+      
       document.getElementById('searchBarModal').style.display = 'block';
-      document.querySelector('input[name="currentButtonId"]').value = currentButton.id;
-      console.log("Current button ID:", currentButton.id);
+      currentButtonId = currentButton.previousSibling.previousSibling.id;
+      document.getElementById('currentButtonId').value = currentButtonId
+      //second previous sibling has semester id. Weird but it works
+      document.getElementById('semesterToQuery').value = semesterToCalendarTerm(currentButtonId)
+ 
       
     }
-    
+
     function closeSearchBar() {
       document.getElementById('searchBarModal').style.display = 'none';
     }
-    
+
     // Close modal if the user clicks outside of its content area
-    window.onclick = function(event) {
+    window.onclick = function (event) {
       const modal = document.getElementById('searchBarModal');
       if (event.target === modal) {
         closeSearchBar();
       }
     }
 
-   student_courses.forEach(course => {
-      addClass(course.course_id, course.course_name, course.term);
-   });
-
-   function addToStudentClasses(classId) {
-      // Get the current button ID
-      const term = document.querySelector('input[name="currentButtonId"]').value;
-      
-      // Close the search bar modal
-      closeSearchBar();
-   }
 
 
+    //semester to date
+
+    function semesterToCalendarTerm(selectedSemester) { 
+      //ex:  Start date fall 2025
+      //sem0: fa25
+      //sem1: sp26
+      //sem2: fa26
+
+      let term = parseInt(selectedSemester.replace('sem', ''));
+      let firstTerm = "{{user.start_term}}"
 
 
-    
-    // Add class to the schedule
-    function addClass(classId, className, term) {
-      //container name is "term + "-container" ex 'fa23-container'
-      const semesterContainer = document.getElementById(term + "-container");
-      term = properTermName(term);
-      console.log("Term: ", term);
-      addClassToSemester(semesterContainer, classId, className)
+      //25, 26, etc
+      let termYear = parseInt(firstTerm.replace('fa' || 'sp', ''));
+
+      //fa or sp
+      let termSemester = firstTerm.slice(0,2)
+
+
+      //Base case 0
+      if (term == 0) {
+        return firstTerm;
+      }
+
+      //nonzero int
+      else {
+        //no float just int wanted for yearsToAdd
+        yearsToAdd = parseInt(term / 2)
+        //if mod 2 = 0, just change year
+        if (term % 2 == 0) {
+          termYear += yearsToAdd
+        }
+        else {
+          //odd term (1,3 ,5)
+          if(termSemester = 'fa') {
+            termSemester = 'sp'
+          }
+          termYear += yearsToAdd
+          termYear += 1
+        }
+
+      }
+      return (termSemester + termYear.toString())
     }
-    // This function creates a class block and appends it to the semester container.
-      function addClassToSemester(container, courseId, courseName, term) {
-      const classBlock = document.createElement("div");
-      classBlock.className = "class-block";
-      classBlock.textContent = `${courseId}`;
-      
-      // When clicking the class block, show an information bubble
-      classBlock.onclick = function(event) {
-        showInfoBubble(event, courseId, courseName);
-      };
-      
-      container.appendChild(classBlock);
-    }
+
+    //function to add new semesters
+    function addSemester() {
+      try {
+        const semesterCount = document.querySelectorAll(".semester").length;
+        const newSemester = document.createElement("div");
+        newSemester.className = "semester";
     
+        newSemester.innerHTML = `
+          <h3>Semester ${semesterCount + 1}</h3>
+          <div id="sem${semesterCount}" class="classes-container"></div>
+          <button onclick="openSearchBar(this)" class="btn custom-btn w-100">Add Class</button>
+        `;
+    
+        //adds and formats new semester box
+        const scrollContainer = document.querySelector(".scroll-container");
+        if (!scrollContainer) {
+          console.error("Scroll container not found");
+          return;
+        }
+    
+        scrollContainer.appendChild(newSemester);
+        scrollContainer.scrollLeft = scrollContainer.scrollWidth;
+    
+        if (typeof schedule === 'undefined') {
+          console.error("Schedule variable is not defined");
+          return;
+        }
+    
+        schedule.push(Array(6).fill(null));
+    
+        //updates UI
+        if (typeof updateUI === 'function') {
+          updateUI();
+        } else {
+          console.error("updateUI function failed");
+        }
+    
+      } catch (error) {
+        console.error("Error adding new semester:", error);
+      }
+    }
+
+    //map semesters for addClassFromModal usage
+    //call this every time the page is reloaded to have an up to date map
+    let semesterMap = []
+    function mapSemestersToTerms() {
+      const semesterCount = document.querySelectorAll(".semester").length;
+      for(let i = 0; i != semesterCount; i++) {
+        semesterMap[i] = (semesterToCalendarTerm('sem' + i))
+      }
+
+    }
+
+    mapSemestersToTerms();
+    console.log('Semester mapping: ', semesterMap)
+
+
+
     // This function creates an information bubble near the clicked class block.
     function showInfoBubble(event, className) {
       let bubble = document.createElement("div");
       bubble.className = "info-bubble";
-      bubble.textContent = "More info about " + className;
+      bubble.innerHTML = `
+        <strong>${classId}</strong><br>
+        ${className}<br>
+        Credits: ${classCredits}
+      `;
+
       // Style the bubble
       bubble.style.position = "absolute";
       bubble.style.backgroundColor = "#fff";
       bubble.style.border = "1px solid #ccc";
-      bubble.style.padding = "5px";
+      bubble.style.padding = "10px";
       bubble.style.borderRadius = "4px";
       bubble.style.boxShadow = "0px 2px 6px rgba(0,0,0,0.2)";
-      
+
       // Position the bubble relative to the clicked element
       let rect = event.target.getBoundingClientRect();
       bubble.style.top = (rect.top + window.scrollY) + "px";
       bubble.style.left = (rect.right + 10 + window.scrollX) + "px";
       bubble.style.zIndex = "1000";
-      
+
       document.body.appendChild(bubble);
-      
+
       // Allow the bubble to be dismissed on click or after a few seconds
-      bubble.onclick = function() {
+      bubble.onclick = function () {
         document.body.removeChild(bubble);
       };
-      setTimeout(function(){
+      setTimeout(function () {
         if (document.body.contains(bubble)) {
           document.body.removeChild(bubble);
         }
       }, 3000);
     }
 
-    function properTermName(term) {
-      let newTerm = "";
-      let season = term.substring(0, 2)
-      let year = term.substring(2, 4)
-      switch(season) {
-        case 'fa':
-          newTerm += 'Fall';
-          break;
-        case 'sp':
-          newTerm += 'Spring';
-          break;
-        case 'su':
-          newTerm += 'Summer';
-          break;
-      }
-      newTerm += ' 20' + year;
-      return newTerm;
-    }
 
-/*
-    function addSemester() {
-      const newSemester = document.createElement("div");
-      newSemester.className = "semester";
-      const semesterCount = document.querySelectorAll(".semester").length + 1;
-
-      newSemester.innerHTML =
-        <h3>Semester ${semesterCount}</h3>
-        <div class="classes-container"></div>
-        <button onclick="openSearchBar(this)" class="btn custom-btn w-100">Browse Courses</button>;
-
-      // Formats placement of new semester box 
-      const scrollContainer = document.querySelector(".scroll-container");
-      scrollContainer.appendChild(newSemester);
-      scrollContainer.scrollLeft = scrollContainer.scrollWidth;
-    }
-*/
 
   </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  {{!-- ----------------D3 library Script----------------------- --}}
+  <script src="https://d3js.org/d3.v6.min.js"></script>
+  <script>
+    // 1) Our in-memory schedule: 8 semesters × 6 slots each
+    const schedule = Array.from({ length: 8 }, _ => Array(6).fill(null));
+
+    // 2) Helper to redraw all semesters
+    function updateUI() {
+      schedule.forEach((slots, semIdx) => {
+        // select the container by its id (sem0, sem1, …)
+        const container = d3.select(`#sem${semIdx}`);
+
+        // Bind slot data
+        const slotSel = container.selectAll('.slot')
+          .data(slots, (_, i) => i);
+
+        // ENTER empty slots
+        slotSel.enter()
+          .append('div')
+          .classed('slot', true)
+          .merge(slotSel)
+          .each(function (data, slotIdx) {
+            d3.select(this).selectAll('div.class-block').remove();
+            if (data) {
+              // If there's a class in this slot, render it
+              d3.select(this)
+                .append('div')
+                .classed('class-block', true)
+                .html(`
+                ${data.id}
+                <div class="tooltip-info">
+                  <strong>${data.name}</strong><br>
+                  ID: ${data.id}<br>
+                  Credits: ${data.credit_hours}<br>
+                  Description: ${data.description}
+                </div>
+              `)
+                .attr('data-course-id', data.id)
+                .call(d3.drag()
+                  .on('start', dragstarted)
+                  .on('drag', dragged)
+                  .on('end', dragended)
+                );
+            }
+          });
+
+        // EXIT any extra slots (shouldn't happen, but safe)
+        slotSel.exit().remove();
+      });
+    }
+
+    // 3) Add a new class into the first available slot in the clicked semester
+    //pass inputted class object
+    function addClassFromModal(inputted_class) {
+      // find which sem button opened the modal
+      let term = inputted_class.term;
+      let termId = 0;
+      let id = inputted_class.course_id;
+      let name = inputted_class.course_name;
+      let credit_hours = inputted_class.credit_hours;
+      console.log("ID: ", id)
+      console.log("NAME: ", name)
+      console.log("CREDIT HOURS:" , credit_hours)
+      for (let i = 0; i < semesterMap.length; i++) {
+        if(semesterMap[i] == term) {
+          termId = i;
+        }
+      }
+      console.log("TERM ID:" ,termId)
+      const slots = schedule[termId];
+      const empty = slots.indexOf(null);
+      if (empty === -1) return alert('No room in that semester');
+      slots[empty] = { id, name, credit_hours };
+      updateUI();
+    }
+      student_courses.forEach(course => {
+    addClassFromModal(course)
+   })
+
+    // 4) D3 drag handlers
+    let dragging = null;
+
+    function dragstarted(event, d) {
+      const node = this;
+      const rect = node.getBoundingClientRect();
+
+      // record where inside the box we clicked
+      d._offsetX = event.x - rect.left;
+      d._offsetY = event.y - rect.top;
+
+      dragging = {
+        data: d,
+        semIdx: +node.parentNode.parentNode.id.replace('sem', ''),
+        slotIdx: Array.from(node.parentNode.parentNode.children)
+          .indexOf(node.parentNode)
+      };
+
+      d3.select(node)
+        .classed('dragging', true)
+        .style('width', rect.width + 'px')
+        .style('height', rect.height + 'px');
+    }
+
+    function dragged(event, d) {
+      // move using the original click offset
+      d3.select(this)
+        .style('left', (event.x - d._offsetX) + 'px')
+        .style('top', (event.y - d._offsetY) + 'px');
+    }
+
+    function dragended(event, d) {
+      const node = this;
+      // remove dragging styles
+      d3.select(node)
+        .classed('dragging', false)
+        .style('width', null)
+        .style('height', null)
+        .style('left', null)
+        .style('top', null);
+
+      // find drop target
+      const [x, y] = [event.sourceEvent.clientX, event.sourceEvent.clientY];
+      let dest = null;
+      schedule.forEach((slots, semIdx) => {
+        const cont = document.getElementById(`sem${semIdx}`);
+        cont.querySelectorAll('.slot').forEach((slotEl, slotIdx) => {
+          const r = slotEl.getBoundingClientRect();
+          if (x >= r.left && x <= r.right && y >= r.top && y <= r.bottom) {
+            dest = { semIdx, slotIdx };
+          }
+        });
+      });
+
+     if (dest) {
+  const existing = schedule[dest.semIdx][dest.slotIdx];
+  if (!existing) {
+    // only move if the slot is empty
+    schedule[dragging.semIdx][dragging.slotIdx] = null;
+    schedule[dest.semIdx][dest.slotIdx]     = dragging.data;
+      }
+    }
+
+      updateUI();
+
+            //update database with newly dragged class
+      fetch('/student_courses/updateTerm', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          identikey:   STUDENT_IDENTIKEY,        
+          course_id:   dragging.data.id,
+          term:        semesterMap[dest.semIdx]
+        })
+      })
+      .then(r => r.json())
+      .then(r => {
+        if (!r.success) console.error('save failed', r.error);
+      })
+      .catch(console.error);
+
+
+      dragging = null;
+    }
+    // 5) Initial render
+    document.addEventListener('DOMContentLoaded', updateUI);
+  </script>
+
+  <script> //inject student identikey into front end
+      const STUDENT_IDENTIKEY = '{{user.identikey}}';
+  </script>
+
 </body>
+
 </html>
