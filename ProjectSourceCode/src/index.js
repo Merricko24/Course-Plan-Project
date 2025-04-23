@@ -248,6 +248,9 @@ app.post('/addStudentClass', async (req, res) => {
 })
 
 
+//----------Advisor get students----------
+
+
 //----------Class Search Route ---------
 app.post('/getClasses', async (req, res) =>  {
   try {
@@ -324,14 +327,22 @@ app.get('/schedule', async (req, res) => {
 
 //-----------Advisor Register After Route--------------
 
-app.get('/scheduleAdvisor', (req, res) => {
+app.get('/scheduleAdvisor', async (req, res) => {
   const user = req.session.user;
+  const advisor_id = user.identikey;
+
+
 
   if (!user || !user.isAdvisor) {
     return res.redirect('/login');
   }
+
+
+  const students = await db.any(`SELECT identikey, advisor_notes, first_name, last_name, year, start_term, student_courses FROM students WHERE advisor_id = '${advisor_id}'`);
+  console.log(students);
   res.render('pages/scheduleAdvisor', {
-    user: user
+    user: user,
+    real_students: JSON.stringify(students),
   });
 });
 
@@ -354,6 +365,18 @@ app.get('/profile', (req, res) => {
   }
 });
 ///////////////
+
+app.get('/fetchStudentData', async (req, res) => { 
+  console.log("no");
+});
+
+app.post('/submit_notes', (req, res) => {
+  const { student_identikey, notes } = req.body;
+
+  db.any(`UPDATE students SET advisor_notes = '${notes}' WHERE identikey = '${student_identikey}'`);
+
+
+});
 
 
 // Update a course’s term when it’s dragged into a new semester
