@@ -82,7 +82,7 @@ app.get('/register', (req, res) => {
 });
 
 app.get('/', (req, res) => {
-  res.render('pages/login');
+  res.render('pages/home');
 });
 
 // Handle user registration
