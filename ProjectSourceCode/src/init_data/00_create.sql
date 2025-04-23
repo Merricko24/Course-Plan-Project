@@ -22,6 +22,16 @@ CREATE TABLE advisors (
   student_ids VARCHAR(20)[]
 );
 
+
+DROP TABLE IF EXISTS advisor_notes;
+CREATE TABLE advisor_notes (
+  id SERIAL PRIMARY KEY,
+  student_identikey VARCHAR(20) REFERENCES students(identikey),
+  advisor_identikey VARCHAR(20) REFERENCES advisors(identikey),
+  note_text TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 --This is the code for student courses
 
 
