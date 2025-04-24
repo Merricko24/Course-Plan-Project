@@ -385,6 +385,20 @@ app.get('/scheduleAdvisor', async (req, res) => {
   }
 });
 
+app.post('/save-notes', async (req, res) => {
+  const { identikey, notes } = req.body;
+
+  try {
+    await db.none(
+      `UPDATE students SET advisor_notes = $1 WHERE identikey = $2`,
+      [notes, identikey]
+    );
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Error saving notes:', error);  // ← watch server logs
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
 
 
 
@@ -417,6 +431,7 @@ app.post('/submit_notes', (req, res) => {
 
 
 });
+
 
 
 // Update a course’s term when it’s dragged into a new semester
