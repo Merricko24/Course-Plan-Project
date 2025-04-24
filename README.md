@@ -59,29 +59,43 @@ The feature would identify and show which courses users qualify for based on the
 - Plan page - horizontal scrolling of all your semesters  
 - Credits for each class  
 - Class hours and semester availabilities  
-- Class ratings?  
-- **RateMyProfessor API?** Not public but found some resources we can use to implement it  
 - Flowchart side-scrolling style course planner  
 - Ability to add more semesters as needed  
 - **Advisor Collaboration Mode** - Lets advisors see and comment on class choice/graduation plans while maintaining a degree of separation between advisor and student (as per the premise of the website)  
 
-## 7. Audience  
+## 7. Technology Stack
+- For this project, we used Github to plan, track, and collaborate on our website
+- We used VSCode as our code editor, which ensured quick and easy updates and progress
+- We used Docker Desktop to simplify the building and running of our application
+- We used mySQL to build the database that drives our website
+- We used html and javascript to implement our website
+
+## 8. Prerequisites to run the application
+- All you need to run the application is the link to the website. No other software except for a browser are required.
+
+## 9. Running the application locally
+- All you need to run the application locally is:
+- Any code editor (VSCode, terminal)
+- Docker Desktop
+- any browser to access localhost
+
+## 10. Audience  
 - Students who need help planning their semester’s courses for the near or distant future  
 - Students who need class recommendations  
 - Students who need to see what they should/have to take and see their course plans to the end of college  
 
-## 8. Vision Statement  
+## 11. Vision Statement  
 **Ensuring students can plan out their degree requirements and stay on track to graduate.**  
 
-## 9. Development Methodology  
+## 12. Development Methodology  
 - Use a **Kanban board** to keep track of user stories  
 - Use **Agile methodology** to track and delegate tasks  
 - Check in periodically to see how user-assigned stories are progressing  
 
-## 10. Communication Plan  
+## 13. Communication Plan  
 - We plan to communicate on a **Discord server** named: *CSCI 3308 Group Project*  
 - We plan to make sub-channels to discuss and document various parts of the project  
 
-## 11. Meeting Plan  
+## 14. Meeting Plan  
 - **Fridays at 4:30 PM - 4:45 PM** with TA over Zoom  
 - **Tuesdays at 12 PM** for group work time in person
