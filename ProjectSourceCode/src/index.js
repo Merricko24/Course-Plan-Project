@@ -388,9 +388,6 @@ app.get('/scheduleAdvisor', async (req, res) => {
 
 
 
-
-
-
 ////profile//////////
 // Authentication Required
 
