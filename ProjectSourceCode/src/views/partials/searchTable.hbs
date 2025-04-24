@@ -1,31 +1,45 @@
-         <div class="table-scroll-wrap">
-         <table class="table searchTable">
-             <thead>
-            <tr>
-                <th scope="col">Course ID</th>
-                <th scope="col">Course Name</th>
-                <th scope="col">Credit Hours</th>
-                <th scope="col">Term</th>
-                <th scope="col"> Action </th>
-              
-            </tr>
-        </thead>
-        <tbody>
-            {{#each courses}}
-            <tr>
-                <th scope="row">{{this.course_id}}</th>
-                <td>{{this.course_name}}</td>
-                <td>{{this.credit_hours}}</td>
-                <td>{{this.term}}</td>
-                <td>
-                    <form action='/addStudentClass' method="POST">
-                    <!-- preventDefault stops the add button from doing anything else that it shouldn't -->
-                    <button type = 'submit' class="btn btn-success" onclick="preventDefault(); closeSearchBar();">Add</button>
-                    <input type="hidden" name="course_id" value="{{this.course_id}}">
+<div class="table-scroll-wrap">
+  <table class="table searchTable">
+    <thead>
+      <tr>
+        <th scope="col">Course ID</th>
+        <th scope="col">Course Name</th>
+        <th scope="col">Credit Hours</th>
+        <th scope="col">Term</th>
+        <th scope="col">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each courses}}
+        <tr>
+          <th scope="row">{{this.course_id}}</th>
+          <td>{{this.course_name}}</td>
+          <td>{{this.credit_hours}}</td>
+          <td>{{this.term}}</td>
+          <td>
+            <form action="/addStudentClass" method="POST">
+              <input type="hidden" name="course_id" value="{{this.course_id}}">
+              <button type="submit" class="btn btn-success" onclick="closeSearchBar();">Add</button>
+            </form>
+          </td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</div>
 
-                </td>       
-                </form>  </tr>
-            {{/each}}
-        </tbody>
-    </table>
-    </div>
+{{!-- Recommended Classes Placeholder Section --}}
+<div class="recommended-classes mt-4">
+  <h5>Recommended Classes</h5>
+  <ul class="list-group">
+    <li class="list-group-item">PLACEHOLDER: Intro to Example Studies (EX101) - 3 credits</li>
+    <li class="list-group-item">PLACEHOLDER: Advanced Placeholder Concepts (PL202) - 4 credits</li>
+    <li class="list-group-item">PLACEHOLDER: Sample Course Theory (SC303) - 2 credits</li>
+    <li class="list-group-item">PLACEHOLDER: Sample Course Theory (SC303) - 2 credits</li>
+    <li class="list-group-item">PLACEHOLDER: Sample Course Theory (SC303) - 2 credits</li>
+    <li class="list-group-item">PLACEHOLDER: Sample Course Theory (SC303) - 2 credits</li>
+    <li class="list-group-item">PLACEHOLDER: Sample Course Theory (SC303) - 2 credits</li>
+    <li class="list-group-item">PLACEHOLDER: Sample Course Theory (SC303) - 2 credits</li>
+
+  </ul>
+</div>

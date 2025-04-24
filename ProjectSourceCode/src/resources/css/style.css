@@ -124,7 +124,7 @@
 /* table wrapper (for scrolling searched classes) */
 .table-scroll-wrap {
   display: inline-block;
-  max-height: 400px;
+  max-height: 300px;
   margin-top: 20px;
   width: 100%;
   overflow: auto;
@@ -302,7 +302,7 @@ body, html {
 
 .modal-content {
   background-color: #fff;
-  padding-top: 10%;
+  padding-top: 0.25%;
   width: 300px;
   border-radius: 8px;
   text-align: top;
@@ -498,3 +498,65 @@ main {
 .class-block:hover .tooltip-info {
   visibility: visible;
 }
+
+
+.recommended-classes {
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+}
+.recommended-classes h5 {
+  font-size: 30px !important;
+  font-weight: bold !important;
+  color: #fff !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+.recommended-classes table {
+  /* make table scrollable within the section */
+  display: block;
+  width: 100%;
+  max-height: 30vh;
+  overflow-y: auto;
+  border-collapse: collapse;
+}
+.recommended-classes table thead,
+.recommended-classes table tbody {
+  display: block;
+}
+.recommended-classes table thead th {
+  /* keep header row fixed */
+  position: sticky;
+  top: 0;
+  background-color: #f8f9fa;
+  z-index: 1;
+}
+.recommended-classes table tbody td {
+  /* match cell borders */
+  border: 1px solid #dee2e6 !important;
+}
+
+.recommended-classes {
+  border: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+  margin-top: 0 !important;
+}
+.recommended-classes table {
+  border: none !important;
+}
+/* Ensure only cell borders remain */
+.recommended-classes table th,
+.recommended-classes table td {
+  border: 1px solid #dee2e6 !important;
+}
+.recommended-classes table thead th {
+  border-bottom: 2px solid #dee2e6 !important;
+}
+
+/* Make recommended classes scrollable when content overflows */
+.recommended-classes {
+  max-height: 30vh !important;
+  overflow-y: auto !important;
+}
+
