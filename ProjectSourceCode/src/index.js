@@ -376,20 +376,7 @@ app.get('/scheduleAdvisor', async (req, res) => {
 });
 
 
-app.post('/save-notes', async (req, res) => {
-  const { identikey, notes } = req.body;
 
-  console.log('Saving notes for student:', identikey);
-  console.log('Notes content:', notes);
-
-  try {
-    await db.none('UPDATE students SET notes = $1 WHERE identikey = $2', [notes, identikey]);
-    res.status(200).send('Notes updated successfully');
-  } catch (error) {
-    console.error('Error updating notes:', error.message, error.stack);
-    res.status(500).send('Error updating notes');
-  }
-});
 
 
 
