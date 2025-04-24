@@ -10,7 +10,7 @@ CREATE TABLE students (
   year VARCHAR(15),
   start_term VARCHAR(20),
   advisor_id VARCHAR(20),
-  advisor_notes VARCHAR(200),
+  advisor_notes VARCHAR(2000),
   student_courses VARCHAR(50)[],
   number_of_semesters NUMERIC
 

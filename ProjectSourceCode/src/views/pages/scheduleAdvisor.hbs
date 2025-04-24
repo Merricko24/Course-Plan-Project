@@ -45,11 +45,24 @@
       </ul>
       
       <div class="notes-section">
-        <h5>Advising Notes</h5>
- <textarea style="width: 100%; height: 100px;" name="notes" id="notes" class="form-control" placeholder="Add notes about this student's academic progress"></textarea>
-        <button class="btn custom-btn w-100 mt-2">Save Notes</button>
-      </div>
+      <h5>Advising Notes</h5>
+        <!-- hidden field for which student we’re editing -->
+        <input type="hidden" name="studentIdentikey" id="notes-studentIdentikey">
+
+        <textarea
+          name="note_text"
+          id="notes"
+          class="form-control"
+          rows="4"
+          placeholder="Add notes about this student's academic progress"
+        >{{student.advisor_notes}}</textarea>
+
+        <button id="save-notes-btn" type="submit" class="btn custom-btn w-100 mt-2">
+          Save Notes
+        </button>
     </div>
+
+  </div>
 
     <!-- Content Area -->
     <div class="content">
@@ -145,6 +158,11 @@
     function loadStudentSchedule() {
       const studentId = document.getElementById('student-dropdown').value;
       currentStudentId = studentId;
+
+      
+      document.getElementById('notes-studentIdentikey').value = studentId;
+      document.getElementById('notes').value = students[studentId].advisor_notes || '';
+
       
       if (!studentId) {
         document.getElementById('student-info-panel').style.display = 'none';
@@ -154,6 +172,14 @@
       }
       
       const student = students[studentId];
+
+
+      // 1) Set the form’s action URL so it posts to our update route
+      const notesForm = document.getElementById('notes-form');
+      notesForm.action = `/advisor/${studentId}/notes`;
+
+      document.getElementById('notes').value = student.advisor_notes || '';
+
       
       // Update student info panel
       document.getElementById('student-info-panel').style.display = 'block';
@@ -434,6 +460,28 @@
       // Set the advisor name (would come from session in a real app)
       document.getElementById('advisor-full-name').textContent = 'Test Advisor';
     });
+
+document.getElementById('save-notes-btn').addEventListener('click', async () => {
+  if (!currentStudentId) return alert('Select a student first');
+  const noteText = document.getElementById('notes').value;
+  const resp = await fetch(`/scheduleAdvisor`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      studentIdentikey: currentStudentId,
+      note_text: noteText
+    })
+  });
+  if (resp.ok) {
+    // Update our in-memory `students` object so subsequent switches show the new text:
+    students[currentStudentId].advisor_notes = noteText;
+    alert('Notes saved!');
+  } else {
+    alert('Save failed');
+  }
+});
+
+
   </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

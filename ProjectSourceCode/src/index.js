@@ -347,6 +347,27 @@ app.get('/scheduleAdvisor', async (req, res) => {
 });
 
 
+///Advisor Post////
+app.post(
+  '/scheduleAdvisor',  async (req, res, next) => {
+    try {
+      // 1) extract student ID & note text
+      const { studentIdentikey, note_text } = req.body;
+      // 2) update that student’s advisor_notes column
+      await db.none(
+        `UPDATE students
+            SET advisor_notes = $2
+          WHERE identikey     = $1`,
+        [studentIdentikey, note_text]
+      );
+      // 3) redirect back to GET /scheduleAdvisor?student=...
+      res.redirect(`/scheduleAdvisor?student=${studentIdentikey}`);
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
 
 ////profile//////////
 // Authentication Required
@@ -396,6 +417,25 @@ app.post('/student_courses/updateTerm', async (req, res) => {
     res.status(500).json({ success: false, error: err.message });
   }
 });
+
+
+
+///////NOTES route
+
+app.post('/scheduleAdvisor', async (req, res, next) => {
+  try {
+    console.log("ScheduleAdvisor Post hit");
+    const { studentIdentikey, note_text } = req.body;
+    await db.none(
+      `UPDATE students SET advisor_notes = $2 WHERE identikey = $1`,
+      [studentIdentikey, note_text]
+    );
+    res.sendStatus(200);
+  } catch (err) {
+    next(err);
+  }
+});
+
 
 // -------------------------------------  START SERVER   ----------------------------------------------
 
