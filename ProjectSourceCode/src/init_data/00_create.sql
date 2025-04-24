@@ -58,7 +58,8 @@ CREATE TABLE student_courses (
   course_id VARCHAR(20) NOT NULL,
   course_name VARCHAR(50) NOT NULL,
   credit_hours NUMERIC NOT NULL,
-  term VARCHAR(20) NOT NULL
+  term VARCHAR(20) NOT NULL,
+  taken BOOLEAN DEFAULT false
 );
 
 

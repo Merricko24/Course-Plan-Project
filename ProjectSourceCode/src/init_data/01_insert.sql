@@ -1,4 +1,7 @@
+ INSERT INTO students(identikey, password, first_name, last_name, start_term, advisor_id) VALUES 
+ ('abab5380', '$2a$10$eZ2.mCQqaWsGltXqL9bYMeXYR1yK3vlsRkLUC8TlotToZm3YRqroC', 'test', 'user', 'fa25', 'fesu3567' );
 
+ 
  INSERT INTO courses (course_id, course_name, credit_hours, term) VALUES 
 ('CSCI1300', 'Introduction to Computer Science', 3, 'fa25'),
 ('CSCI2270', 'Data Structures', 4, 'fa25'),

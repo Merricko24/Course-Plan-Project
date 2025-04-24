@@ -238,7 +238,7 @@ app.post('/addStudentClass', async (req, res) => {
   const identikey = req.session.user.identikey;
   const cDB = await db.oneOrNone(`SELECT * FROM courses WHERE course_id = '${course_id}'`);
 
-  await db.none(`INSERT INTO student_courses (identikey, course_id, course_name, credit_hours, term) VALUES ('${identikey}', '${cDB.course_id}', '${cDB.course_name}', ${cDB.credit_hours}, '${cDB.term}')`)
+  await db.none(`INSERT INTO student_courses (identikey, course_id, course_name, credit_hours, term, taken) VALUES ('${identikey}', '${cDB.course_id}', '${cDB.course_name}', ${cDB.credit_hours}, '${cDB.term}', true)`)
   .then(() => {
     res.redirect('/schedule');
 
@@ -258,6 +258,11 @@ app.post('/getClasses', async (req, res) =>  {
     // Get courses from database
     await db.any(`SELECT * FROM courses WHERE (term = '${term}') AND ((course_id ILIKE '%${keyword}%') OR (course_name ILIKE '%${keyword}%')) `)
     .then((courses) => {
+      const takenCourseIds = student_courses.map(sc => sc.course_id);
+      courses.forEach(course => {
+        course.taken = takenCourseIds.includes(course.course_id);
+      });
+      console.log("Rendering with these courses:", courses);
       res.render('pages/schedule', {
         courses: courses,
         user: req.session.user,
@@ -309,7 +314,7 @@ app.get('/schedule', async (req, res) => {
     let student_courses = await db.any(`SELECT * FROM student_courses WHERE identikey = '${req.session.user.identikey}'`)
     res.render('pages/schedule', { 
       user: req.session.user,
-      courses: null,
+      courses: [],
       student_courses: JSON.stringify(student_courses) 
     });
 
