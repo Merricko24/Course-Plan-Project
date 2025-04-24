@@ -277,10 +277,47 @@ body, html {
 
 /* Styling for the added class block */
 .class-block {
+  position: relative;    /* needed for absolute-positioned children */
   padding: 8px;
   margin-bottom: 5px;
   border-radius: 4px;
   cursor: pointer;
+}
+
+.remove-wrapper {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 30%;           
+  height: 100%;
+  overflow: hidden;     /* clip anything outside this box */
+}
+
+.remove-btn {
+  position: absolute;
+  top: 0;
+  right: -100%;
+  bottom: 0;
+  width: 100%;          /* fill the wrapper */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(220, 53, 69, 0.1);
+  color: #dc3545;
+  font-size: 1.2rem;
+  border: none;
+
+  /* hidden until hover */
+  opacity: 0;
+  pointer-events: none;
+  transition: right 0.2s ease, opacity 0.2s ease;
+}
+
+/* 3) on hover, slide it in */
+.class-block:hover .remove-wrapper .remove-btn {
+  right: 0;
+  opacity: 1;
+  pointer-events: auto;
 }
 
 /* Modal styling */

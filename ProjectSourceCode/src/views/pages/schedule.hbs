@@ -97,6 +97,7 @@
       {{#if courses}}
       {{> searchTable}}
       {{/if}}
+
  
         
       </div>
@@ -360,16 +361,27 @@
                 .append('div')
                 .classed('class-block', true)
                 .html(`
-                ${data.id}
-                <div class="tooltip-info">
-                  <strong>${data.name}</strong><br>
-                  ID: ${data.id}<br>
-                  Credits: ${data.credit_hours}<br>
-                  Description: ${data.description}
-                </div>
-              `)
+                  <div class="course-content d-flex justify-content-between align-items-center">
+                    <span class="course-id">${data.id}</span>
+
+                    <div class="remove-wrapper">
+                      <form action="/removeStudentClass" method="POST">
+                        <input type="hidden" name="course_id" value="${data.id}">
+                        <button type="submit" class="remove-btn">&times;</button>
+                      </form>
+                    </div>
+                  </div>
+
+                  <div class="tooltip-info">
+                    <strong>${data.name}</strong><br>
+                    ID: ${data.id}<br>
+                    Credits: ${data.credit_hours}<br>
+                    Description: ${data.description}
+                  </div>
+                `)
                 .attr('data-course-id', data.id)
                 .call(d3.drag()
+                  .filter(event => !event.target.closest('button.remove-btn'))
                   .on('start', dragstarted)
                   .on('drag', dragged)
                   .on('end', dragended)
@@ -428,10 +440,12 @@
           .indexOf(node.parentNode)
       };
 
-      d3.select(node)
+      d3.select(this)
         .classed('dragging', true)
         .style('width', rect.width + 'px')
-        .style('height', rect.height + 'px');
+        .style('height', rect.height + 'px')
+        .style('left', (event.x - d._offsetX) + 'px')
+        .style('top', (event.y - d._offsetY) + 'px');
     }
 
     function dragged(event, d) {
