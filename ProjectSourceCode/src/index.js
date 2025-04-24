@@ -165,16 +165,15 @@ try {
       a_or_s = 'students';
     }
     //check if password is correct
-    const userpass = await db.oneOrNone(`SELECT password FROM ${a_or_s} WHERE identikey = '${identikey}'`);
-    const match = await bcrypt.compare(password, userpass.password);
-    if(match) {
-        // console.log("Login success");
-        // console.log(advisor)
-        // console.log(student)
-
-        //student user
-        if(advisor == null) {
-           user =  {
+    const userpass = await db.oneOrNone(`SELECT password FROM ${a_or_s} WHERE identikey = $1`, [identikey]);
+    const match = await bcrypt.compare(password, userpass?.password || '');
+    
+    if (match) {
+      let user;
+    
+      if (advisor == null) {
+        // Student user
+        user = {
             identikey : student.identikey,
             first_name : student.first_name,
             last_name : student.last_name,
@@ -184,24 +183,26 @@ try {
             advisor_id : student.advisor_id,
             student_courses: student.student_courses,
             isAdvisor: false
-            }
-        }
-
-
-        else {
-          //advisor user
-           user =  {
-            identikey : advisor.identikey,
-            first_name : advisor.first_name,
-            last_name : advisor.last_name,
-            email : advisor.email,
-            student_ids: advisor.student_ids,
-            isAdvisor: true
-            }
-       
-        }
-            req.session.user = user;
-            req.session.save();
+        };
+      } else {
+        // Advisor user
+        user = {
+          identikey : advisor.identikey,
+          first_name : advisor.first_name,
+          last_name : advisor.last_name,
+          email : advisor.email,
+          student_ids: advisor.student_ids,
+          isAdvisor: true
+        };
+      }
+    
+      req.session.user = user;
+      req.session.save();
+    } else {
+      return res.status(401).render('pages/login', {
+        message: 'Incorrect password.',
+        error: true
+      });
     }
 
     // Redirect to the appropriate page based on user type
@@ -240,7 +241,7 @@ app.post('/addStudentClass', async (req, res) => {
   const identikey = req.session.user.identikey;
   const cDB = await db.oneOrNone(`SELECT * FROM courses WHERE course_id = '${course_id}'`);
 
-  await db.none(`INSERT INTO student_courses (identikey, course_id, course_name, credit_hours, term) VALUES ('${identikey}', '${cDB.course_id}', '${cDB.course_name}', ${cDB.credit_hours}, '${cDB.term}')`)
+  await db.none(`INSERT INTO student_courses (identikey, course_id, course_name, credit_hours, term, taken) VALUES ('${identikey}', '${cDB.course_id}', '${cDB.course_name}', ${cDB.credit_hours}, '${cDB.term}', true)`)
   .then(() => {
     res.redirect('/schedule');
 
@@ -260,6 +261,11 @@ app.post('/getClasses', async (req, res) =>  {
     // Get courses from database
     await db.any(`SELECT * FROM courses WHERE (term = '${term}') AND ((course_id ILIKE '%${keyword}%') OR (course_name ILIKE '%${keyword}%')) `)
     .then((courses) => {
+      const takenCourseIds = student_courses.map(sc => sc.course_id);
+      courses.forEach(course => {
+        course.taken = takenCourseIds.includes(course.course_id);
+      });
+      console.log("Rendering with these courses:", courses);
       res.render('pages/schedule', {
         courses: courses,
         user: req.session.user,
@@ -311,7 +317,7 @@ app.get('/schedule', async (req, res) => {
     let student_courses = await db.any(`SELECT * FROM student_courses WHERE identikey = '${req.session.user.identikey}'`)
     res.render('pages/schedule', { 
       user: req.session.user,
-      courses: null,
+      courses: [],
       student_courses: JSON.stringify(student_courses) 
     });
 
