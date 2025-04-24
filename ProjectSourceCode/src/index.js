@@ -273,8 +273,6 @@ app.post('/getClasses', async (req, res) =>  {
 
 
      });
-
-
   }
   catch (error) {
     return res.status(500).json({ message: 'Internal server error' });
@@ -327,23 +325,54 @@ app.get('/schedule', async (req, res) => {
 
 //-----------Advisor Register After Route--------------
 
+// Advisor Schedule Page (pulling from student_courses field in students table)
+// Advisor Schedule Page (display courses from student_ids array)
 app.get('/scheduleAdvisor', async (req, res) => {
-  const user = req.session.user;
-  const advisor_id = user.identikey;
+  try {
+    const studentRows = await db.any('SELECT * FROM students');
+    const students = {};
 
+    for (const student of studentRows) {
+      const courseIds = student.student_ids || student.student_courses || [];
+      let scheduledCourses = {};
 
+      if (courseIds.length > 0) {
+        const courseData = await db.any(
+          `SELECT course_id, course_name, credit_hours FROM courses WHERE course_id = ANY($1)`,
+          [courseIds]
+        );
 
-  if (!user || !user.isAdvisor) {
-    return res.redirect('/login');
+        scheduledCourses['fa25'] = courseData.map(c => ({
+          course_id: c.course_id,
+          course_name: c.course_name,
+          credit_hours: c.credit_hours,
+          term: 'fa25'
+        }));
+      }
+
+      students[student.identikey] = {
+        identikey: student.identikey,
+        first_name: student.first_name,
+        last_name: student.last_name,
+        email: student.email,
+        year: student.year,
+        start_term: student.start_term || 'fa25',
+        scheduledCourses
+      };
+    }
+
+    const defaultStudentKey = Object.keys(students)[0];
+
+    res.render('pages/scheduleAdvisor', {
+      user: req.session.user,
+      real_students: JSON.stringify(students),
+      defaultStudentKey
+    });
+
+  } catch (err) {
+    console.error('Error loading advisor schedule:', err);
+    res.status(500).send('Internal Server Error');
   }
-
-
-  const students = await db.any(`SELECT identikey, advisor_notes, first_name, last_name, year, start_term, student_courses FROM students WHERE advisor_id = '${advisor_id}'`);
-  console.log(students);
-  res.render('pages/scheduleAdvisor', {
-    user: user,
-    real_students: students
-  });
 });
 
 
@@ -367,6 +396,10 @@ app.post(
     }
   }
 );
+
+
+
+
 
 
 ////profile//////////
