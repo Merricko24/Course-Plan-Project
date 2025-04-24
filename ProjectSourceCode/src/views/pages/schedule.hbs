@@ -440,10 +440,12 @@
           .indexOf(node.parentNode)
       };
 
-      d3.select(node)
+      d3.select(this)
         .classed('dragging', true)
         .style('width', rect.width + 'px')
-        .style('height', rect.height + 'px');
+        .style('height', rect.height + 'px')
+        .style('left', (event.x - d._offsetX) + 'px')
+        .style('top', (event.y - d._offsetY) + 'px');
     }
 
     function dragged(event, d) {
