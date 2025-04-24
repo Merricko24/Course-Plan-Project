@@ -4,7 +4,7 @@ DROP TABLE IF EXISTS advisors;
 CREATE TABLE students (
   identikey VARCHAR(20) PRIMARY KEY NOT NULL,
   password VARCHAR(60) NOT NULL,
-  first_name VARCHAR(50) NOT NULL,
+ first_name  VARCHAR(50) NOT NULL,
   last_name VARCHAR(50) NOT NULL,
   email VARCHAR(200),
   year VARCHAR(15),
