@@ -1,6 +1,6 @@
 
- INSERT INTO students(identikey, password, first_name, last_name, start_term, advisor_id, advisor_notes, student_courses) VALUES 
- ('abab5380', '$2a$10$eZ2.mCQqaWsGltXqL9bYMeXYR1yK3vlsRkLUC8TlotToZm3YRqroC', 'test', 'user', 'fa25', 'fesu3567', 'Student on track to graduate.', ARRAY['CSCI1300', 'CSCI2270'] );
+ INSERT INTO students(identikey, password, first_name, last_name, start_term, advisor_id, student_courses) VALUES 
+ ('abab5380', '$2a$10$eZ2.mCQqaWsGltXqL9bYMeXYR1yK3vlsRkLUC8TlotToZm3YRqroC', 'test', 'user', 'fa25', 'fesu3567', ARRAY['CSCI1300', 'CSCI2270'] );
 
  INSERT INTO advisors (identikey, password, first_name, last_name, student_ids) VALUES
  ('fesu3567', '$2a$10$eZ2.mCQqaWsGltXqL9bYMeXYR1yK3vlsRkLUC8TlotToZm3YRqroC', 'test', 'advisor', ARRAY['abab5380']);
