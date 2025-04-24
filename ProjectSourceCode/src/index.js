@@ -180,6 +180,7 @@ try {
             email : student.email,
             year : student.year,
             start_term : student.start_term,
+            advisor_notes: student.advisor_notes,
             advisor_id : student.advisor_id,
             student_courses: student.student_courses,
             isAdvisor: false

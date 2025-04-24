@@ -12,12 +12,24 @@
 
 <body>
   <!-- Main Container -->
-  <div class="main-container">
+ <div class="main-container">
     <!-- Sidebar for Current Semester -->
     <div class="sidebar">
       <h2>Current Semester</h2>
-      <h5>Welcome, <a style = 'text-align: center;'>{{user.identikey}}</a></h5>
-      
+      <h5>Welcome, <a style='text-align: center;'>{{user.identikey}}</a></h5>
+
+      {{#if user.advisor_notes}}
+      <div class="advisor-notes mt-4">
+        <h6><strong>Advisor Notes</strong></h6>
+        <p>{{user.advisor_notes}}</p>
+      </div>
+      {{else}}
+      <div class="advisor-notes mt-4">
+        <h6><strong>Advisor Notes</strong></h6>
+        <p>No notes from your advisor yet.</p>
+      </div>
+      {{/if}}
+
     </div>
 
     <!-- Content Area -->
