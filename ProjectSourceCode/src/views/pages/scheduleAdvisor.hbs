@@ -24,9 +24,9 @@
         <select id="student-dropdown" onchange="loadStudentSchedule()">
           <option value="">Choose a student...</option>
           <option value="joab1234">John Applebee</option>
-          <option value="coca9230">Coleman Caldwell</option>
-          <option value="bpit2018">Brad Pitt</option>
-          <option value="mann2000">Man Name</option>
+          {{#each real_students}}
+          <option value="{{this.identikey}}"> {{this.first_name}} {{this.last_name}}</option>
+          {{/each}}
         </select>
       </div>
       
@@ -119,61 +119,15 @@
 
   <!-- JavaScript -->
   <script>
+    {{#if real_students}}
+    console.log("Real students data is available.");
+    let students = {{{real_students}}}
+    {{else}}
+    let students = null;
+    {{/if}}
+ 
     // Sample data for demonstration
-    const students = {
-      'joab1234': {
-        firstName: 'John',
-        lastName: 'Applebee',
-        email: 'joab1234@colorado.edu',
-        year: 'Freshman',
-        advisorId: 'umar1234',
-        takenCourses: ['CSCI1300'],
-        scheduledCourses: {
-          'fall-2023': ['CSCI1300'],
-          'spring-2024': ['CSCI2270'],
-          'fall-2024': []
-        }
-      },
-      'coca9230': {
-        firstName: 'Coleman',
-        lastName: 'Caldwell',
-        email: 'coca9230@colorado.edu',
-        year: 'Senior',
-        advisorId: 'eche1337',
-        takenCourses: ['CSCI1300', 'CSCI2270'],
-        scheduledCourses: {
-          'fall-2023': ['CSCI1300', 'CSCI2270'],
-          'spring-2024': ['CSCI3287'],
-          'fall-2024': ['CSCI3753']
-        }
-      },
-      'bpit2018': {
-        firstName: 'Brad',
-        lastName: 'Pitt',
-        email: 'bpit2018@colorado.edu',
-        year: 'Sophomore',
-        advisorId: 'eche1337',
-        takenCourses: [],
-        scheduledCourses: {
-          'fall-2023': [],
-          'spring-2024': ['CSCI1300'],
-          'fall-2024': ['CSCI2270']
-        }
-      },
-      'mann2000': {
-        firstName: 'Man',
-        lastName: 'Name',
-        email: 'test@colorado.edu',
-        year: 'Senior',
-        advisorId: 'umar1234',
-        takenCourses: [],
-        scheduledCourses: {
-          'fall-2023': [],
-          'spring-2024': [],
-          'fall-2024': []
-        }
-      }
-    };
+    
     
     const courses = [
       { courseId: 'CSCI1300', courseName: 'Introduction to Computer Science', creditHours: 3 },

@@ -342,7 +342,7 @@ app.get('/scheduleAdvisor', async (req, res) => {
   console.log(students);
   res.render('pages/scheduleAdvisor', {
     user: user,
-    real_students: JSON.stringify(students),
+    real_students: students
   });
 });
 
