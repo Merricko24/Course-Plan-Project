@@ -4,6 +4,7 @@
 
  INSERT INTO advisors (identikey, password, first_name, last_name, student_ids) VALUES
  ('fesu3567', '$2a$10$eZ2.mCQqaWsGltXqL9bYMeXYR1yK3vlsRkLUC8TlotToZm3YRqroC', 'test', 'advisor', ARRAY['abab5380']);
+ 
  INSERT INTO courses (course_id, course_name, credit_hours, term) VALUES 
 ('CSCI1300', 'Introduction to Computer Science', 3, 'fa25'),
 ('CSCI2270', 'Data Structures', 4, 'fa25'),
