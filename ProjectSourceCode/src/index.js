@@ -10,6 +10,8 @@ const session = require('express-session');
 const { error } = require('console');
 app.use(express.static(__dirname + ''));
 
+app.use(express.urlencoded({ extended: true }));
+
 app.use('/resources', express.static(path.join(__dirname, 'resources')));
 
 // -------------------------------------  APP CONFIG   ----------------------------------------------
@@ -370,6 +372,37 @@ app.post('/student_courses/updateTerm', async (req, res) => {
   } catch (err) {
     console.error('Error updating term:', err);
     res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+
+////remove class route:
+
+
+app.post('/removeStudentClass', async (req, res, next) => {
+  try {
+
+    const course_id = req.body.course_id;
+    if (!course_id) {
+      console.error('No course_id in form!');
+      return res.status(400).send('Missing course_id');
+    }
+    const identikey = req.session?.user?.identikey;
+    if (!identikey) {
+      console.error('No user in session!');
+      return res.redirect('/login');  // or whatever makes sense
+    }
+
+    const result = await db.result(
+      `DELETE FROM student_courses
+         WHERE identikey = $1
+           AND course_id = $2`,
+      [identikey, course_id]
+    );
+
+    return res.redirect('/schedule');
+  } catch (err) {
+    next(err);
   }
 });
 
