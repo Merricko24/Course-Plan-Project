@@ -359,21 +359,24 @@ app.get('/scheduleAdvisor', async (req, res) => {
     const students = {};
 
     for (const student of studentRows) {
-      const courseIds = student.student_ids || student.student_courses || [];
-      let scheduledCourses = {};
+      const scheduledCourses = {};
 
-      if (courseIds.length > 0) {
-        const courseData = await db.any(
-          `SELECT course_id, course_name, credit_hours FROM courses WHERE course_id = ANY($1)`,
-          [courseIds]
-        );
+      const studentCourses = await db.any(
+        `SELECT * FROM student_courses WHERE identikey = $1`,
+        [student.identikey]
+      );
 
-        scheduledCourses['fa25'] = courseData.map(c => ({
-          course_id: c.course_id,
-          course_name: c.course_name,
-          credit_hours: c.credit_hours,
-          term: 'fa25'
-        }));
+      for (const course of studentCourses) {
+        const term = course.term || 'fa25'; // default if missing
+        if (!scheduledCourses[term]) {
+          scheduledCourses[term] = [];
+        }
+        scheduledCourses[term].push({
+          course_id: course.course_id,
+          course_name: course.course_name,
+          credit_hours: course.credit_hours,
+          term: course.term
+        });
       }
 
       students[student.identikey] = {
