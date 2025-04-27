@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Advisor - Student Schedule</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
-  <link rel="stylesheet" href="../../resources/css/style.css"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="../../resources/css/style.css" />
 </head>
+
 <body>
   <div class="main-container d-flex">
     <!-- Sidebar -->
@@ -35,13 +37,8 @@
         <h5>Advising Notes</h5>
         <form id="notes-form">
           <input type="hidden" name="studentIdentikey" id="notes-studentIdentikey" />
-          <textarea
-            name="note_text"
-            id="notes"
-            class="form-control"
-            rows="4"
-            placeholder="Add notes about this student's academic progress"
-          ></textarea>
+          <textarea name="note_text" id="notes" class="form-control" rows="4"
+            placeholder="Add notes about this student's academic progress"></textarea>
           <button type="submit" class="btn btn-primary mt-2 w-100">Save Notes</button>
         </form>
       </div>
@@ -50,69 +47,114 @@
     <!-- Content Area -->
     <div class="content">
       <div class="scroll-container">
-        <div class="semester"><h3>Semester 1</h3><div id="sem0" class="classes-container">
-          <div class="class-block" data-course-id="CSCI2270">
-                  <div class="course-content d-flex justify-content-between align-items-center">
-                    <span class="course-id">CSCI1300</span>
-                  </div>
+        <div class="semester">
+          <h3>Semester 1</h3>
+          <div id="sem0" class="classes-container">
+            <div class="class-block" data-course-id="CSCI2270">
+              <div class="course-content d-flex justify-content-between align-items-center">
+                <span class="course-id">CSCI1300</span>
+              </div>
 
-                  <div class="tooltip-info">
-                    <strong>Introduction to Computer Science</strong><br>
-                    ID: CSCI1300<br>
-                    Credits: 4<br>
-                    Description: Introductory course in computer science. Fundamentals of programming.
-                  </div>
-                </div>
-        </div></div>
-        <div class="semester"><h3>Semester 2</h3><div id="sem1" class="classes-container">
-          <div class="class-block" data-course-id="CSCI2270">
-                  <div class="course-content d-flex justify-content-between align-items-center">
-                    <span class="course-id">CSCI2270</span>
+              <div class="tooltip-info">
+                <strong>Introduction to Computer Science</strong><br>
+                ID: CSCI1300<br>
+                Credits: 4<br>
+                Description: Introductory course in computer science. Fundamentals of programming.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="semester">
+          <h3>Semester 2</h3>
+          <div id="sem1" class="classes-container">
+            <div class="class-block" data-course-id="CSCI2270">
+              <div class="course-content d-flex justify-content-between align-items-center">
+                <span class="course-id">CSCI2270</span>
 
-      
-                  </div>
 
-                  <div class="tooltip-info">
-                    <strong>Data Structures</strong><br>
-                    ID: CSCI2270<br>
-                    Credits: 4<br>
-                    Description: Focuses on Data Structures and Algorithms. Covers lists, stacks, queues, trees, and graphs.
-                  </div>
-                </div>
-        </div></div>
-        <div class="semester"><h3>Semester 3</h3><div id="sem2" class="classes-container"></div></div>
-        <div class="semester"><h3>Semester 4</h3><div id="sem3" class="classes-container"></div></div>
-        <div class="semester"><h3>Semester 5</h3><div id="sem4" class="classes-container"></div></div>
-        <div class="semester"><h3>Semester 6</h3><div id="sem5" class="classes-container"></div></div>
-        <div class="semester"><h3>Semester 7</h3><div id="sem6" class="classes-container"></div></div>
-        <div class="semester"><h3>Semester 8</h3><div id="sem7" class="classes-container"></div></div>
+              </div>
+
+              <div class="tooltip-info">
+                <strong>Data Structures</strong><br>
+                ID: CSCI2270<br>
+                Credits: 4<br>
+                Description: Focuses on Data Structures and Algorithms. Covers lists, stacks, queues, trees, and graphs.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="semester">
+          <h3>Semester 3</h3>
+          <div id="sem2" class="classes-container"></div>
+        </div>
+        <div class="semester">
+          <h3>Semester 4</h3>
+          <div id="sem3" class="classes-container"></div>
+        </div>
+        <div class="semester">
+          <h3>Semester 5</h3>
+          <div id="sem4" class="classes-container"></div>
+        </div>
+        <div class="semester">
+          <h3>Semester 6</h3>
+          <div id="sem5" class="classes-container"></div>
+        </div>
+        <div class="semester">
+          <h3>Semester 7</h3>
+          <div id="sem6" class="classes-container"></div>
+        </div>
+        <div class="semester">
+          <h3>Semester 8</h3>
+          <div id="sem7" class="classes-container"></div>
+        </div>
       </div>
     </div>
   </div>
 
   <!-- Scripts -->
   <script>
-    const students = {{{real_students}}};
+    const students = {{{ real_students }}};
     const defaultStudentId = '{{defaultStudentKey}}';
 
     window.onload = function () {
       const dropdown = document.getElementById('student-dropdown');
+
       for (const identikey in students) {
         const student = students[identikey];
         const option = document.createElement('option');
         option.value = identikey;
         option.textContent = `${student.first_name} ${student.last_name} (${identikey})`;
-        if (identikey === defaultStudentId) option.selected = true;
         dropdown.appendChild(option);
       }
-      //loadStudentSchedule(defaultStudentId);
+
+      document.getElementById("notes-studentIdentikey").value = "";
+
+      document.getElementById("student-info-panel").style.display = 'none';
+
+      clearSchedule();
     };
+
+    function clearSchedule() {
+      for (let i = 0; i < 8; i++) {
+        const container = document.getElementById(`sem${i}`);
+        if (container) container.innerHTML = '';
+      }
+    }
 
     function loadStudentSchedule(selectedId = null) {
       const studentId = selectedId || document.getElementById("student-dropdown").value;
+
+      if (!studentId) {
+        // If nothing selected, hide student info panel and notes
+        document.getElementById("student-info-panel").style.display = 'none';
+        document.getElementById("notes-studentIdentikey").value = "";
+        return;
+      }
+
       const student = students[studentId];
       if (!student) return;
 
+      // Show info
       document.getElementById("student-info-panel").style.display = 'block';
       document.getElementById("student-name").textContent = `${student.first_name} ${student.last_name}`;
       document.getElementById("student-id").textContent = student.identikey;
@@ -126,20 +168,37 @@
       document.getElementById("notes").value = student.advisor_notes || '';
       document.getElementById("notes-studentIdentikey").value = student.identikey;
 
+      // Clear any old schedule first
       clearSchedule();
 
-      for (let i = 0; i < 8; i++) {
-        const semesterCourses = student.scheduledCourses?.[i];
-        const container = document.getElementById(`sem${i}`);
-        if (semesterCourses && container) {
-          semesterCourses.forEach(course => {
-            const div = document.createElement("div");
-            div.className = 'class-block';
-            div.textContent = `${course.course_id}`;
-            container.appendChild(div);
-          });
-        }
+      // Now load the new student's courses
+      for (let term in student.scheduledCourses) {
+        const semesterIndex = getSemesterIndexFromTerm(term); // Helper function needed
+        const container = document.getElementById(`sem${semesterIndex}`);
+        if (!container) continue;
+
+        const courses = student.scheduledCourses[term];
+        courses.forEach(course => {
+          const div = document.createElement("div");
+          div.className = "class-block";
+          div.innerHTML = `
+      <div class="course-content d-flex justify-content-between align-items-center">
+        <span class="course-id">${course.course_id}</span>
+      </div>`;
+          container.appendChild(div);
+        });
       }
+    }
+
+    function getSemesterIndexFromTerm(term) {
+      // assumes starting term is fa25
+      const year = parseInt(term.slice(2));
+      const isFall = term.startsWith('fa');
+
+      let diff = (year - 25) * 2;
+      if (!isFall) diff += 1;
+
+      return diff;
     }
 
     function clearSchedule() {
@@ -169,6 +228,12 @@
         });
 
         if (response.ok) {
+          console.log('studentId:', studentId);
+          console.log('students object:', students);
+          console.log('students[studentId]:', students[studentId]);
+
+          students[studentId].advisor_notes = notes;
+
           alert('Notes saved successfully!');
         } else {
           alert('Failed to save notes.');
@@ -181,4 +246,5 @@
   </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
