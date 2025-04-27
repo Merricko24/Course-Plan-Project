@@ -149,6 +149,8 @@
         const container = document.getElementById(`sem${semesterIndex}`);
         if (!container) continue;
 
+        console.log(`Term: ${term}, Semester Index: ${semesterIndex}`);
+
         const courses = student.scheduledCourses[term];
         courses.forEach(course => {
           const div = document.createElement("div");
@@ -163,14 +165,33 @@
     }
 
     function getSemesterIndexFromTerm(term) {
-      // assumes starting term is fa25
-      const year = parseInt(term.slice(2));
-      const isFall = term.startsWith('fa');
+      const selectedStudentId = document.getElementById("student-dropdown").value;
+      const student = students[selectedStudentId];
 
-      let diff = (year - 25) * 2;
-      if (!isFall) diff += 1;
+      console.log('Student data:', students[selectedStudentId]);
 
-      return diff;
+      if (!student || !student.start_term) {
+        console.error("No start_term for student", selectedStudentId);
+        return 0; // fallback
+      }
+
+      const startTerm = student.start_term;
+      const startYear = parseInt(startTerm.slice(2));
+      const startIsFall = startTerm.startsWith('fa');
+
+      const termYear = parseInt(term.slice(2));
+      const termIsFall = term.startsWith('fa');
+
+      let diff = (termYear - startYear) * 2;
+
+      // Adjust fall vs spring logic
+      if (termIsFall) {
+        diff += 0; // Fall is the starting point
+      } else {
+        diff -= 1; // Spring follows fall
+      }
+
+      return diff + (startIsFall ? 0 : 1); // Adjust if starting term isn't fall
     }
 
     function clearSchedule() {

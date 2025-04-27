@@ -179,7 +179,7 @@ app.post('/login', async (req, res) => {
           last_name: student.last_name,
           email: student.email,
           year: student.year,
-          start_term: student.start_term,
+          start_term: "fa25",
           advisor_notes: student.advisor_notes,
           advisor_id: student.advisor_id,
           student_courses: student.student_courses,
