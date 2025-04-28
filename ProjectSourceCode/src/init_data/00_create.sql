@@ -25,6 +25,8 @@ CREATE TABLE advisors (
   student_ids VARCHAR(20)[]
 );
 
+--This is the code for student courses
+
 
 DROP TABLE IF EXISTS advisor_notes;
 CREATE TABLE advisor_notes (
