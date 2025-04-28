@@ -79,6 +79,12 @@ The feature would identify and show which courses users qualify for based on the
 - Docker Desktop
 - any browser to access localhost
 
+## Instructions to run the application locally
+- Open VSCode or an editor of your choice
+- Enter command "docker compose up"
+- Open a web browser of your choice and type in localhost:300/
+- Now you will be in the homepage of our app, Schedules4U
+
 ## 10. Audience  
 - Students who need help planning their semester’s courses for the near or distant future  
 - Students who need class recommendations  
@@ -99,3 +105,6 @@ The feature would identify and show which courses users qualify for based on the
 ## 14. Meeting Plan  
 - **Fridays at 4:30 PM - 4:45 PM** with TA over Zoom  
 - **Tuesdays at 12 PM** for group work time in person
+
+## Link to Application
+https://course-plan-project.onrender.com/register 

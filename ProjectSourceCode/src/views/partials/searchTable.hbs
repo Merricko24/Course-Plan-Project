@@ -19,9 +19,12 @@
                 <td>{{this.term}}</td>
                 <td>
                     <form action='/addStudentClass' method="POST">
-                    <!-- preventDefault stops the add button from doing anything else that it shouldn't -->
+                    {{#if this.taken}}
+                    <button type = 'submit' class="btn btn-secondary" onclick="preventDefault(); closeSearchBar();" disabled>Added</button>
+                    {{else}}
                     <button type = 'submit' class="btn btn-success" onclick="preventDefault(); closeSearchBar();">Add</button>
                     <input type="hidden" name="course_id" value="{{this.course_id}}">
+                    {{/if}}
 
                 </td>       
                 </form>  </tr>
