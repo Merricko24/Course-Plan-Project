@@ -242,7 +242,7 @@ app.post('/addStudentClass', async (req, res) => {
   const identikey = req.session.user.identikey;
   const cDB = await db.oneOrNone(`SELECT * FROM courses WHERE course_id = '${course_id}'`);
 
-  await db.none(`INSERT INTO student_courses (identikey, course_id, course_name, credit_hours, term) VALUES ('${identikey}', '${cDB.course_id}', '${cDB.course_name}', ${cDB.credit_hours}, '${cDB.term}')`)
+  await db.none(`INSERT INTO student_courses (identikey, course_id, course_name, credit_hours, term, taken) VALUES ('${identikey}', '${cDB.course_id}', '${cDB.course_name}', ${cDB.credit_hours}, '${cDB.term}', true)`)
     .then(() => {
       res.redirect('/schedule');
 
